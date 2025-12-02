@@ -13,20 +13,33 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   },
 });
 
-const seedBlogPosts = async (): Promise<BlogPost[]> => {
+const serializeAuthor = (author?: BlogPost['author']) => {
+  if (!author) return null;
   try {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .upsert(BLOG_POSTS, { onConflict: 'id' })
-      .select('*');
-
-    if (error) throw error;
-    return data ?? BLOG_POSTS;
+    return JSON.stringify(author);
   } catch (error) {
-    console.error('Failed to seed blog posts, falling back to defaults', error);
-    return BLOG_POSTS;
+    console.error('Failed to serialize author', error);
+    return null;
   }
 };
+
+const deserializeAuthor = (author: BlogPost['author'] | string | null | undefined): BlogPost['author'] => {
+  if (!author) return undefined;
+  if (typeof author === 'string') {
+    try {
+      return JSON.parse(author) as BlogPost['author'];
+    } catch (error) {
+      console.warn('Failed to parse author JSON', error);
+      return undefined;
+    }
+  }
+  return author;
+};
+
+const serializeBlogPost = (post: BlogPost) => ({
+  ...post,
+  author: serializeAuthor(post.author),
+});
 
 const normalizeBlogPost = (post: Partial<BlogPost>): BlogPost => ({
   id: post.id || crypto.randomUUID?.() || Date.now().toString(),
@@ -37,7 +50,7 @@ const normalizeBlogPost = (post: Partial<BlogPost>): BlogPost => ({
   category: post.category || 'その他',
   image: post.image || '',
   tags: post.tags || [],
-  author: post.author,
+  author: deserializeAuthor(post.author),
   summary: post.summary,
   content: post.content,
   checkpoints: post.checkpoints || [],
@@ -55,9 +68,51 @@ const normalizeInquiry = (inquiry: Partial<Inquiry>): Inquiry => ({
   status: inquiry.status || 'new',
 });
 
+const BLOG_CACHE_KEY = 'blog_posts_cache';
+
+const loadCachedPosts = (): BlogPost[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const cached = window.localStorage.getItem(BLOG_CACHE_KEY);
+    if (!cached) return [];
+    return (JSON.parse(cached) as BlogPost[]).map(normalizeBlogPost);
+  } catch (error) {
+    console.warn('Failed to load cached blog posts', error);
+    return [];
+  }
+};
+
+const saveCachedPosts = (posts: BlogPost[]) => {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(BLOG_CACHE_KEY, JSON.stringify(posts.map(serializeBlogPost)));
+  } catch (error) {
+    console.warn('Failed to cache blog posts', error);
+  }
+};
+
+const seedBlogPosts = async (): Promise<BlogPost[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .upsert(BLOG_POSTS.map(serializeBlogPost), { onConflict: 'id' })
+      .select('*');
+
+    if (error) throw error;
+    const normalized = (data ?? BLOG_POSTS).map(normalizeBlogPost);
+    saveCachedPosts(normalized);
+    return normalized;
+  } catch (error) {
+    console.error('Failed to seed blog posts, falling back to defaults', error);
+    saveCachedPosts(BLOG_POSTS);
+    return BLOG_POSTS;
+  }
+};
+
 export const storage = {
   // Blog Posts
   getBlogPosts: async (): Promise<BlogPost[]> => {
+    const cached = loadCachedPosts();
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -70,9 +125,13 @@ export const storage = {
         return seedBlogPosts();
       }
 
-      return data.map(normalizeBlogPost);
+      const normalized = data.map(normalizeBlogPost);
+      saveCachedPosts(normalized);
+      return normalized;
     } catch (error) {
       console.error('Failed to fetch blog posts from Supabase', error);
+      if (cached.length > 0) return cached;
+      saveCachedPosts(BLOG_POSTS);
       return BLOG_POSTS;
     }
   },
@@ -88,10 +147,17 @@ export const storage = {
 
       if (error) throw error;
       if (!data) return undefined;
-      return normalizeBlogPost(data);
+      const normalized = normalizeBlogPost(data);
+      saveCachedPosts(
+        [normalized, ...loadCachedPosts()].reduce<BlogPost[]>((acc, post) => {
+          if (acc.some(p => p.id === post.id)) return acc;
+          return [...acc, post];
+        }, []),
+      );
+      return normalized;
     } catch (error) {
       console.error('Failed to fetch blog post', error);
-      const local = BLOG_POSTS.find(p => p.id === id);
+      const local = [...loadCachedPosts(), ...BLOG_POSTS].find(p => p.id === id);
       return local ? normalizeBlogPost(local) : undefined;
     }
   },
@@ -101,14 +167,21 @@ export const storage = {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .upsert(postToSave, { onConflict: 'id' })
+        .upsert(serializeBlogPost(postToSave), { onConflict: 'id' })
         .select('*')
         .single();
 
       if (error) throw error;
-      return normalizeBlogPost(data);
+      const normalized = normalizeBlogPost(data);
+      const cachedPosts = loadCachedPosts();
+      const updated = [normalized, ...cachedPosts.filter(p => p.id !== normalized.id)];
+      saveCachedPosts(updated);
+      return normalized;
     } catch (error) {
       console.error('Failed to save blog post', error);
+      const cachedPosts = loadCachedPosts();
+      const updated = [postToSave, ...cachedPosts.filter(p => p.id !== postToSave.id)];
+      saveCachedPosts(updated);
       return postToSave;
     }
   },
@@ -120,6 +193,8 @@ export const storage = {
     } catch (error) {
       console.error('Failed to delete blog post', error);
     }
+    const cachedPosts = loadCachedPosts().filter(p => p.id !== id);
+    saveCachedPosts(cachedPosts);
   },
 
   // Inquiries
