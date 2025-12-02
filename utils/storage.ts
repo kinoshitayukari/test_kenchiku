@@ -13,15 +13,43 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   },
 });
 
+const serializeAuthor = (author?: BlogPost['author']) => {
+  if (!author) return null;
+  try {
+    return JSON.stringify(author);
+  } catch (error) {
+    console.error('Failed to serialize author', error);
+    return null;
+  }
+};
+
+const deserializeAuthor = (author: BlogPost['author'] | string | null | undefined): BlogPost['author'] => {
+  if (!author) return undefined;
+  if (typeof author === 'string') {
+    try {
+      return JSON.parse(author) as BlogPost['author'];
+    } catch (error) {
+      console.warn('Failed to parse author JSON', error);
+      return undefined;
+    }
+  }
+  return author;
+};
+
+const serializeBlogPost = (post: BlogPost) => ({
+  ...post,
+  author: serializeAuthor(post.author),
+});
+
 const seedBlogPosts = async (): Promise<BlogPost[]> => {
   try {
     const { data, error } = await supabase
       .from('blog_posts')
-      .upsert(BLOG_POSTS, { onConflict: 'id' })
+      .upsert(BLOG_POSTS.map(serializeBlogPost), { onConflict: 'id' })
       .select('*');
 
     if (error) throw error;
-    return data ?? BLOG_POSTS;
+    return (data ?? BLOG_POSTS).map(normalizeBlogPost);
   } catch (error) {
     console.error('Failed to seed blog posts, falling back to defaults', error);
     return BLOG_POSTS;
@@ -37,7 +65,7 @@ const normalizeBlogPost = (post: Partial<BlogPost>): BlogPost => ({
   category: post.category || 'その他',
   image: post.image || '',
   tags: post.tags || [],
-  author: post.author,
+  author: deserializeAuthor(post.author),
   summary: post.summary,
   content: post.content,
   checkpoints: post.checkpoints || [],
@@ -101,7 +129,7 @@ export const storage = {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .upsert(postToSave, { onConflict: 'id' })
+        .upsert(serializeBlogPost(postToSave), { onConflict: 'id' })
         .select('*')
         .single();
 
