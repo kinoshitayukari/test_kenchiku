@@ -15,7 +15,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '1',
     title: 'キッチンリフォーム',
-    image: 'https://picsum.photos/seed/kitchen1/600/800',
+    image: 'https://images.unsplash.com/photo-1616628182501-237f6f84255d?auto=format&fit=crop&w=1200&q=80',
     category: 'kitchen',
     description: '築25年の戸建て、工期2週間',
     details: {
@@ -27,7 +27,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '2',
     title: '浴室リフォーム',
-    image: 'https://picsum.photos/seed/bath1/600/800',
+    image: 'https://images.unsplash.com/photo-1582719478171-2f2df4f0b76d?auto=format&fit=crop&w=1200&q=80',
     category: 'bath',
     description: 'マンション、工期10日',
     details: {
@@ -39,7 +39,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '3',
     title: 'リビングリフォーム',
-    image: 'https://picsum.photos/seed/living1/600/800',
+    image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80',
     category: 'living',
     description: '戸建て全面改装、工期3週間',
     details: {
@@ -51,7 +51,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '4',
     title: '外壁塗装',
-    image: 'https://picsum.photos/seed/exterior1/600/800',
+    image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80',
     category: 'exterior',
     description: '戸建て、工期1週間',
     details: {
@@ -63,7 +63,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '5',
     title: 'トイレリフォーム',
-    image: 'https://picsum.photos/seed/toilet1/600/800',
+    image: 'https://images.unsplash.com/photo-1616594039964-7e07c48f3a59?auto=format&fit=crop&w=1200&q=80',
     category: 'toilet',
     description: 'マンション、工期5日',
     details: {
@@ -75,7 +75,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '6',
     title: '和室リフォーム',
-    image: 'https://picsum.photos/seed/japanese1/600/800',
+    image: 'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=1200&q=80',
     category: 'japanese',
     description: '戸建て、工期2週間',
     details: {
@@ -156,7 +156,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '5分',
     category: 'キッチン',
     tags: ['キッチン', '失敗しない', 'ポイント'],
-    image: 'https://picsum.photos/seed/blog1/800/500',
+    image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: '佐藤 健太',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
@@ -179,7 +179,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '4分',
     category: '浴室',
     tags: ['浴室', 'トレンド', '2025'],
-    image: 'https://picsum.photos/seed/blog2/800/500',
+    image: 'https://images.unsplash.com/photo-1617099390840-9b0e4d52f7e3?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: '田中 美咲',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
@@ -202,7 +202,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '6分',
     category: '外壁',
     tags: ['外壁', '塗装', 'タイミング'],
-    image: 'https://picsum.photos/seed/blog3/800/500',
+    image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: '鈴木 一郎',
       avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d'
@@ -225,7 +225,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '5分',
     category: 'コスト',
     tags: ['費用', '節約', '計画'],
-    image: 'https://picsum.photos/seed/blog4/800/500',
+    image: 'https://images.unsplash.com/photo-1523419400524-2122f6a4b3be?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: '佐藤 健太',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'
@@ -248,7 +248,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '5分',
     category: 'リビング',
     tags: ['リビング', '家族', '空間'],
-    image: 'https://picsum.photos/seed/blog5/800/500',
+    image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: '田中 美咲',
       avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d'
@@ -271,7 +271,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: '4分',
     category: '和室',
     tags: ['和室', '洋室', 'リフォーム'],
-    image: 'https://picsum.photos/seed/blog6/800/500',
+    image: 'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: '鈴木 一郎',
       avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d'

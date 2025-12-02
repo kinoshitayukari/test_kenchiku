@@ -78,11 +78,11 @@ const Home: React.FC = () => {
              <div className="absolute top-0 right-0 w-full h-full bg-orange-100 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] opacity-50 blur-3xl -z-10"></div>
              
              {/* Hero Image */}
-             <img 
-               src="https://picsum.photos/seed/interior/800/1000" 
-               alt="Modern Kitchen Renovation" 
-               className="w-full h-full object-cover rounded-3xl shadow-2xl"
-             />
+            <img
+              src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
+              alt="Warm and modern renovated living space"
+              className="w-full h-full object-cover rounded-3xl shadow-2xl"
+            />
              
              {/* Floating Badge */}
              <div className="absolute bottom-10 -left-6 bg-white p-4 rounded-xl shadow-xl hidden md:block max-w-[200px]">
