@@ -29,7 +29,22 @@ create table if not exists inquiries (
   date date default current_date
 );
 
--- 2) Seed or upsert default blog posts
+-- (If you only need the seed, run this whole block so the table is created beforehand)
+create table if not exists blog_posts (
+  id text primary key,
+  title text not null,
+  excerpt text,
+  content text,
+  summary text,
+  category text,
+  tags text[],
+  image text,
+  readTime text,
+  date date default current_date,
+  author text,
+  checkpoints jsonb
+);
+
 insert into blog_posts (id, title, excerpt, content, summary, category, tags, image, readTime, date)
 values
   ('post-1', 'タイトル', '抜粋', '本文', 'サマリー', 'カテゴリ', '{リフォーム,水回り}', 'https://...', '5分', '2024-07-01')

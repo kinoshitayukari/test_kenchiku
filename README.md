@@ -37,11 +37,12 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    - 複数削除はチェックボックス選択→ **Delete**。
 3. SQL でまとめて投入・更新する場合は **SQL Editor** を使います。`supabase/sql/manual_ops.sql` にテーブル作成から初期データ投入、
    ステータス更新、古い問い合わせの一括削除、最新データの確認までよく使うクエリをまとめています。必要な行だけコピーして実行してください。
-   - 初期投入のみ簡単に実行したい場合は以下を貼り付ければ OK です。
+   - 初期投入だけ行う場合でも、テーブル未作成だとエラーになるので下記の 2 行をまとめて貼り付けてください（`create table if not exists` で事前作成してから投入します）。
      ```sql
+     create table if not exists blog_posts (id text primary key, title text not null, excerpt text, content text, summary text, category text, tags text[], image text, readTime text, date date default current_date, author text, checkpoints jsonb);
+
      insert into blog_posts (id, title, excerpt, content, summary, category, tags, image, readTime, date)
-     values
-       ('post-1', 'タイトル', '抜粋', '本文', 'サマリー', 'カテゴリ', '{リフォーム,水回り}', 'https://...', '5分', '2024-07-01')
+     values ('post-1', 'タイトル', '抜粋', '本文', 'サマリー', 'カテゴリ', '{リフォーム,水回り}', 'https://...', '5分', '2024-07-01')
      on conflict (id) do update set title = excluded.title;
      ```
 
