@@ -35,13 +35,15 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    - 右上の **Insert** から新規行を追加できます。`id` は UUID をそのまま入力するか空欄でも自動生成されます。
    - 既存行をクリックして内容を編集、保存できます。
    - 複数削除はチェックボックス選択→ **Delete**。
-3. SQL でまとめて投入する場合は **SQL Editor** で以下を実行します（例: 初期ブログ記事追加）。
-   ```sql
-   insert into blog_posts (id, title, excerpt, content, summary, category, tags, image, readTime, date)
-   values
-     ('post-1', 'タイトル', '抜粋', '本文', 'サマリー', 'カテゴリ', '{リフォーム,水回り}', 'https://...', '5分', '2024-07-01')
-   on conflict (id) do update set title = excluded.title;
-   ```
+3. SQL でまとめて投入・更新する場合は **SQL Editor** を使います。`supabase/sql/manual_ops.sql` にテーブル作成から初期データ投入、
+   ステータス更新、古い問い合わせの一括削除、最新データの確認までよく使うクエリをまとめています。必要な行だけコピーして実行してください。
+   - 初期投入のみ簡単に実行したい場合は以下を貼り付ければ OK です。
+     ```sql
+     insert into blog_posts (id, title, excerpt, content, summary, category, tags, image, readTime, date)
+     values
+       ('post-1', 'タイトル', '抜粋', '本文', 'サマリー', 'カテゴリ', '{リフォーム,水回り}', 'https://...', '5分', '2024-07-01')
+     on conflict (id) do update set title = excluded.title;
+     ```
 
 ### REST API で確認・操作する例
 - 記事一覧取得
