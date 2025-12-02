@@ -28,16 +28,21 @@ const AdminBlogEdit: React.FC = () => {
 
   const [checkpointsStr, setCheckpointsStr] = useState('');
   const [tagsStr, setTagsStr] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (isEdit && id) {
-      const post = storage.getBlogPost(id);
-      if (post) {
-        setFormData(post);
-        setCheckpointsStr(post.checkpoints?.join('\n') || '');
-        setTagsStr(post.tags.join(', '));
+    const loadPost = async () => {
+      if (isEdit && id) {
+        const post = await storage.getBlogPost(id);
+        if (post) {
+          setFormData(post);
+          setCheckpointsStr(post.checkpoints?.join('\n') || '');
+          setTagsStr(post.tags.join(', '));
+        }
       }
-    }
+    };
+
+    loadPost();
   }, [id, isEdit]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -45,9 +50,10 @@ const AdminBlogEdit: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setIsSaving(true);
+
     const checkpoints = checkpointsStr.split('\n').filter(s => s.trim() !== '');
     const tags = tagsStr.split(',').map(s => s.trim()).filter(s => s !== '');
 
@@ -58,8 +64,15 @@ const AdminBlogEdit: React.FC = () => {
       tags
     } as BlogPost;
 
-    storage.saveBlogPost(postToSave);
-    navigate('/admin/blog');
+    try {
+      await storage.saveBlogPost(postToSave);
+      navigate('/admin/blog');
+    } catch (error) {
+      console.error('Failed to save blog post', error);
+      alert('保存に失敗しました。時間を置いて再度お試しください。');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -183,11 +196,12 @@ const AdminBlogEdit: React.FC = () => {
           >
             キャンセル
           </button>
-          <button 
-            type="submit" 
-            className="px-6 py-2 rounded bg-brand-orange text-white font-bold hover:bg-orange-600 transition-colors"
+          <button
+            type="submit"
+            disabled={isSaving}
+            className={`px-6 py-2 rounded bg-brand-orange text-white font-bold transition-colors ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:bg-orange-600'}`}
           >
-            保存する
+            {isSaving ? '保存中...' : '保存する'}
           </button>
         </div>
       </form>

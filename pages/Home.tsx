@@ -14,10 +14,10 @@ const Home: React.FC = () => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormStatus('submitting');
-    
+
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get('name') as string,
@@ -28,12 +28,15 @@ const Home: React.FC = () => {
       message: formData.get('message') as string,
     };
 
-    // Simulate network delay
-    setTimeout(() => {
-      storage.saveInquiry(data);
+    try {
+      await storage.saveInquiry(data);
       setFormStatus('success');
       (e.target as HTMLFormElement).reset();
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to submit inquiry', error);
+      setFormStatus('idle');
+      alert('送信に失敗しました。時間を置いて再度お試しください。');
+    }
   };
 
   return (

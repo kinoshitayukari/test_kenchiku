@@ -8,11 +8,24 @@ import { BlogPost } from '../types';
 const Blog: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('すべて');
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Load posts from storage
-    setPosts(storage.getBlogPosts());
+    const loadPosts = async () => {
+      try {
+        const fetched = await storage.getBlogPosts();
+        setPosts(fetched);
+      } catch (err) {
+        console.error(err);
+        setError('記事の取得中にエラーが発生しました。時間を置いて再度お試しください。');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPosts();
   }, []);
 
   const filteredPosts = activeCategory === 'すべて' 
@@ -48,10 +61,15 @@ const Blog: React.FC = () => {
         </div>
 
         {/* Blog Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post) => (
-            <article 
-              key={post.id} 
+        {isLoading ? (
+          <div className="text-center text-gray-500 py-12">読み込み中...</div>
+        ) : error ? (
+          <div className="text-center text-red-500 py-12">{error}</div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.map((post) => (
+              <article
+                key={post.id}
               className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full cursor-pointer"
               onClick={() => navigate(`/blog/${post.id}`)}
             >
@@ -89,11 +107,12 @@ const Blog: React.FC = () => {
                   </span>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
 
-        {filteredPosts.length === 0 && (
+        {!isLoading && !error && filteredPosts.length === 0 && (
            <div className="text-center py-20 text-gray-500">
              記事が見つかりませんでした。
            </div>

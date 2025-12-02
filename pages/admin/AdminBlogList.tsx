@@ -6,15 +6,30 @@ import { BlogPost } from '../../types';
 
 const AdminBlogList: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setPosts(storage.getBlogPosts());
+    const loadPosts = async () => {
+      try {
+        const fetched = await storage.getBlogPosts();
+        setPosts(fetched);
+      } catch (err) {
+        console.error(err);
+        setError('記事の取得に失敗しました。');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPosts();
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('本当に削除してもよろしいですか？')) {
-      storage.deleteBlogPost(id);
-      setPosts(storage.getBlogPosts());
+      await storage.deleteBlogPost(id);
+      const refreshed = await storage.getBlogPosts();
+      setPosts(refreshed);
     }
   };
 
@@ -39,7 +54,17 @@ const AdminBlogList: React.FC = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {posts.map((post) => (
+            {isLoading && (
+              <tr>
+                <td colSpan={4} className="p-6 text-center text-gray-500">読み込み中...</td>
+              </tr>
+            )}
+            {error && (
+              <tr>
+                <td colSpan={4} className="p-6 text-center text-red-500">{error}</td>
+              </tr>
+            )}
+            {!isLoading && !error && posts.map((post) => (
               <tr key={post.id} className="hover:bg-gray-50">
                 <td className="p-4">
                   <div className="font-bold text-gray-800">{post.title}</div>
@@ -69,7 +94,7 @@ const AdminBlogList: React.FC = () => {
                 </td>
               </tr>
             ))}
-            {posts.length === 0 && (
+            {!isLoading && !error && posts.length === 0 && (
               <tr>
                 <td colSpan={4} className="p-8 text-center text-gray-500">
                   記事がありません。

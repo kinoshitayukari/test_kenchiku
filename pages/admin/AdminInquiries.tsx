@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Mail, Phone, Calendar, Trash2, CheckCircle, Circle } from 'lucide-react';
+import { Mail, Phone, Trash2, CheckCircle, Circle } from 'lucide-react';
 import { storage } from '../../utils/storage';
 import { Inquiry } from '../../types';
 
 const AdminInquiries: React.FC = () => {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setInquiries(storage.getInquiries());
+    const loadInquiries = async () => {
+      try {
+        const fetched = await storage.getInquiries();
+        setInquiries(fetched);
+      } catch (err) {
+        console.error(err);
+        setError('お問い合わせの取得に失敗しました。');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInquiries();
   }, []);
 
-  const handleStatusChange = (id: string, currentStatus: Inquiry['status']) => {
+  const handleStatusChange = async (id: string, currentStatus: Inquiry['status']) => {
     const newStatus = currentStatus === 'new' ? 'read' : 'replied';
-    storage.updateInquiryStatus(id, newStatus);
-    setInquiries(storage.getInquiries());
+    await storage.updateInquiryStatus(id, newStatus);
+    const refreshed = await storage.getInquiries();
+    setInquiries(refreshed);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('本当に削除してもよろしいですか？')) {
-      storage.deleteInquiry(id);
-      setInquiries(storage.getInquiries());
+      await storage.deleteInquiry(id);
+      const refreshed = await storage.getInquiries();
+      setInquiries(refreshed);
     }
   };
 
@@ -28,9 +44,17 @@ const AdminInquiries: React.FC = () => {
       <h2 className="text-2xl font-bold text-gray-800 mb-6">お問い合わせ一覧</h2>
 
       <div className="grid gap-4">
-        {inquiries.map((inquiry) => (
-          <div 
-            key={inquiry.id} 
+        {isLoading && (
+          <div className="text-center py-12 text-gray-500 bg-white rounded-lg">読み込み中...</div>
+        )}
+
+        {error && (
+          <div className="text-center py-12 text-red-500 bg-white rounded-lg">{error}</div>
+        )}
+
+        {!isLoading && !error && inquiries.map((inquiry) => (
+          <div
+            key={inquiry.id}
             className={`bg-white p-6 rounded-lg shadow border-l-4 ${
               inquiry.status === 'new' ? 'border-brand-orange' : 
               inquiry.status === 'read' ? 'border-blue-400' : 'border-green-500'
@@ -87,7 +111,7 @@ const AdminInquiries: React.FC = () => {
           </div>
         ))}
 
-        {inquiries.length === 0 && (
+        {!isLoading && !error && inquiries.length === 0 && (
           <div className="text-center py-12 text-gray-500 bg-white rounded-lg">
             お問い合わせはまだありません。
           </div>
