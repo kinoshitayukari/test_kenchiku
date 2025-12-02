@@ -10,6 +10,27 @@ const Home: React.FC = () => {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
+  const waterAreaHighlights = [
+    {
+      title: 'キッチンリフォーム',
+      description: '収納力と動線を最適化した明るい対面式キッチン',
+      image:
+        'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+    },
+    {
+      title: '浴室リフォーム',
+      description: 'ホテルライクな質感と清潔感を両立した最新バスルーム',
+      image:
+        'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80',
+    },
+    {
+      title: 'トイレリフォーム',
+      description: '手洗いカウンター付きで機能的なコンパクト空間',
+      image:
+        'https://images.unsplash.com/photo-1564540574859-0dfb63985953?auto=format&fit=crop&w=1200&q=80',
+    },
+  ];
+
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
@@ -94,6 +115,39 @@ const Home: React.FC = () => {
                </div>
                <p className="text-[10px] text-gray-400 mt-1">※自社アンケート調べ</p>
              </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Water Area Highlights */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-12 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-4">
+              キッチン・浴室・トイレの最新施工イメージ
+            </h2>
+            <p className="text-gray-600 leading-relaxed">
+              明るく上質な空間づくりをイメージいただける実例写真をピックアップしました。
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {waterAreaHighlights.map((item) => (
+              <div key={item.title} className="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-shadow">
+                <div className="relative h-[280px]">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-200 leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
