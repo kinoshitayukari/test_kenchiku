@@ -26,8 +26,12 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
 1. `.env.local` に Supabase の環境変数を追加します。
 
    ```bash
-   VITE_SUPABASE_URL=あなたのSupabaseプロジェクトURL
+   VITE_SUPABASE_URL=あなたのSupabaseプロジェクトURL（Vercel で環境変数を設定できない場合は下記既定値を利用できます）
    VITE_SUPABASE_ANON_KEY=Anonキー
+
+   # 共有プロジェクトを使う場合の既定値（Vercel に環境変数を追加できないときの代替案）
+   VITE_SUPABASE_URL=https://jfbzwedjqkkmkdcneapf.supabase.co
+   VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmYnp3ZWRqcWtrbWtkY25lYXBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2NTg1MTMsImV4cCI6MjA4MDIzNDUxM30.12v-vfCH51g16ymkzdx7EzfW5LDq4_0ltQOUsSE2J0Y
    ```
 
 2. Supabase の SQL Editor でブログテーブルを作成します。
