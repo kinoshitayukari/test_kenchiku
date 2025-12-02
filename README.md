@@ -88,3 +88,20 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    using (true)
    with check (true);
    ```
+
+4. 既定のリフォーム知識記事を Supabase に投入します（任意）。
+
+   ```bash
+   # 共有プロジェクトを使う場合はそのまま実行できます
+   # 自分の Supabase を使う場合は VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY を事前に設定
+   npm run seed:blogs
+   ```
+
+   スクリプトは以下の6記事を `blog_posts` にアップサートします：
+
+   - 失敗しないリフォーム計画の基本ステップ
+   - 耐久性アップのための住宅チェックポイント
+   - 断熱リフォームで快適さと光熱費を両立
+   - キッチン・浴室・洗面のリフォーム動線
+   - 耐震リフォームで守る家族の安全
+   - リフォーム費用を抑える見積りの読み解き方
