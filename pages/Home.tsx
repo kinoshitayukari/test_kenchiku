@@ -3,18 +3,18 @@ import SectionTitle from '../components/SectionTitle';
 import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS } from '../constants';
 import { Calculator, ShieldCheck, Check, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from '../utils/storage';
+import { inquiryService } from '../utils/inquiryService';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormStatus('submitting');
     
@@ -28,12 +28,14 @@ const Home: React.FC = () => {
       message: formData.get('message') as string,
     };
 
-    // Simulate network delay
-    setTimeout(() => {
-      storage.saveInquiry(data);
+    try {
+      await inquiryService.saveInquiry(data);
       setFormStatus('success');
       (e.target as HTMLFormElement).reset();
-    }, 1000);
+    } catch (error) {
+      console.error(error);
+      setFormStatus('error');
+    }
   };
 
   return (
@@ -281,7 +283,7 @@ const Home: React.FC = () => {
               <Check size={48} className="mx-auto mb-4 text-green-600" />
               <h3 className="text-xl font-bold mb-2">送信完了しました</h3>
               <p>お問い合わせありがとうございます。<br />担当者より24時間以内にご連絡させていただきます。</p>
-              <button 
+              <button
                 onClick={() => setFormStatus('idle')}
                 className="mt-6 text-sm font-bold underline"
               >
@@ -290,6 +292,11 @@ const Home: React.FC = () => {
             </div>
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
+              {formStatus === 'error' && (
+                <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+                  送信に失敗しました。通信環境をご確認の上、再度お試しください。
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   お名前 <span className="text-red-500">*</span>

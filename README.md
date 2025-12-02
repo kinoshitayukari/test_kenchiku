@@ -21,7 +21,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
 
 ## Supabase セットアップ
 
-ブログ記事は Supabase に保存します。以下の手順で設定してください。
+ブログ記事・お問い合わせデータは Supabase に保存します。以下の手順で設定してください。
 
 1. `.env.local` に Supabase の環境変数を追加します。
 
@@ -63,3 +63,28 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    ```
 
    ※ セキュリティ要件に応じてポリシーを調整してください。Anonキーでの保存/削除が必要なため、上記では簡易的に全操作を許可しています。
+
+3. お問い合わせテーブルも SQL Editor から作成します（フォーム送信・管理画面で利用）。
+
+   ```sql
+   create extension if not exists "pgcrypto";
+
+   create table if not exists public.contact_inquiries (
+     id uuid primary key default gen_random_uuid(),
+     name text not null,
+     email text not null,
+     phone text,
+     type text,
+     budget text,
+     message text,
+     status text default 'new',
+     created_at timestamp with time zone default now()
+   );
+
+   alter table public.contact_inquiries enable row level security;
+
+   create policy "Allow anon full access for admin UI" on public.contact_inquiries
+   for all
+   using (true)
+   with check (true);
+   ```
