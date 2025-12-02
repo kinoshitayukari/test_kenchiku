@@ -19,7 +19,7 @@ const buildQuery = (filters: Record<string, { op: string; value: unknown }>, ord
 };
 
 class QueryBuilder<T> {
-  private operation: 'select' | 'upsert' | 'update' | 'delete' = 'select';
+  private operation: 'select' | 'upsert' | 'update' | 'delete' | null = null;
   private columns = '*';
   private filters: Record<string, { op: string; value: unknown }> = {};
   private orderBy?: { column: string; ascending: boolean };
@@ -32,8 +32,10 @@ class QueryBuilder<T> {
   constructor(private readonly baseUrl: string, private readonly table: string, private readonly apiKey: string) {}
 
   select(columns = '*') {
-    this.operation = 'select';
     this.columns = columns;
+    if (!this.operation) {
+      this.operation = 'select';
+    }
     return this;
   }
 
@@ -83,6 +85,7 @@ class QueryBuilder<T> {
   }
 
   async execute(): Promise<{ data: T | null; error: Error | null }> {
+    const op = this.operation ?? 'select';
     const query = buildQuery(this.filters, this.orderBy, this.limitCount, this.columns, this.onConflict);
     const url = `${this.baseUrl}/rest/v1/${this.table}${query ? `?${query}` : ''}`;
     const headers: Record<string, string> = { ...buildHeaders(this.apiKey) };
@@ -90,7 +93,7 @@ class QueryBuilder<T> {
     let method: 'GET' | 'POST' | 'PATCH' | 'DELETE' = 'GET';
     let body: string | undefined;
 
-    switch (this.operation) {
+    switch (op) {
       case 'upsert':
         method = 'POST';
         headers.Prefer = 'resolution=merge-duplicates,return=representation';
@@ -141,7 +144,7 @@ class QueryBuilder<T> {
   }
 }
 
-export const createClient = (url: string, apiKey: string) => {
+export const createClient = (url: string, apiKey: string, _options?: unknown) => {
   const baseUrl = url.replace(/\/$/, '');
   return {
     from<T>(table: string) {
