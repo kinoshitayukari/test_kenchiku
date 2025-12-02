@@ -38,6 +38,27 @@ const Home: React.FC = () => {
     }
   };
 
+  const featureShots = [
+    {
+      title: 'キッチンリフォーム',
+      description: '開放的なアイランドキッチンで家族団らんの時間をもっと快適に。',
+      image:
+        'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      title: '浴室リフォーム',
+      description: 'ホテルライクなバスルームで一日の疲れを癒やすリラックスタイムを。',
+      image:
+        'https://images.unsplash.com/photo-1616594038850-67cb2c13f524?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      title: 'トイレリフォーム',
+      description: '収納と間接照明を組み合わせた、清潔感のあるパウダールーム。',
+      image:
+        'https://images.unsplash.com/photo-1617099390840-9b0e4d52f7e3?auto=format&fit=crop&w=1400&q=80',
+    },
+  ];
+
   return (
     <div className="w-full overflow-hidden">
       {/* Hero Section */}
@@ -67,7 +88,7 @@ const Home: React.FC = () => {
               <button onClick={() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'})} className="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-gray-800 transition-all shadow-lg text-center">
                 無料見積もり依頼
               </button>
-              <button onClick={() => document.getElementById('portfolio')?.scrollIntoView({behavior: 'smooth'})} className="px-8 py-4 rounded-full font-bold text-gray-700 hover:text-brand-orange transition-all flex items-center justify-center gap-2 group">
+             <button onClick={() => document.getElementById('portfolio')?.scrollIntoView({behavior: 'smooth'})} className="px-8 py-4 rounded-full font-bold text-gray-700 hover:text-brand-orange transition-all flex items-center justify-center gap-2 group">
                 施工事例を見る
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
@@ -76,11 +97,11 @@ const Home: React.FC = () => {
           <div className="relative order-1 md:order-2 h-[400px] md:h-[600px]">
              {/* Decorative Background blob */}
              <div className="absolute top-0 right-0 w-full h-full bg-orange-100 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] opacity-50 blur-3xl -z-10"></div>
-             
+
              {/* Hero Image */}
             <img
-              src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
-              alt="Warm and modern renovated living space"
+              src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80"
+              alt="Spacious and bright renovated kitchen space"
               className="w-full h-full object-cover rounded-3xl shadow-2xl"
             />
              
@@ -93,6 +114,45 @@ const Home: React.FC = () => {
                </div>
                <p className="text-[10px] text-gray-400 mt-1">※自社アンケート調べ</p>
              </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Water-area Featured Shots */}
+      <section className="bg-white py-12 md:py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+            <div>
+              <p className="text-sm font-medium text-brand-orange mb-2">水回りのリフォーム例</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">キッチン・浴室・トイレの最新施工イメージ</h2>
+              <p className="text-gray-600 mt-3">明るく上質な空間づくりをイメージいただける実例写真をピックアップしました。</p>
+            </div>
+            <button
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="self-start inline-flex items-center gap-2 px-4 py-3 rounded-full border border-gray-200 text-sm font-semibold hover:border-brand-orange hover:text-brand-orange transition-colors"
+            >
+              相談してみる
+              <ArrowRight size={16} />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featureShots.map((shot) => (
+              <div key={shot.title} className="group bg-[#fdfbf7] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={shot.image}
+                    alt={shot.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <div className="p-5">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{shot.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{shot.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
