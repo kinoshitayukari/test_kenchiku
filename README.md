@@ -19,6 +19,10 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
 3. Run the app:
    `npm run dev`
 
+## 画像を追加したい場合（`public/` の活用）
+
+デプロイやビルドを挟まずに配信したい画像は、プロジェクト直下に `public/` ディレクトリを作成してアップロードします。GitHub の Web UI から直接追加する場合は、`public/` に移動して **Add file > Upload files** で画像をドラッグ＆ドロップしてください。`src`/`pages` からはルート相対パス（例: `/images/example.png`）で参照できます。
+
 ## Supabase セットアップ
 
 ブログ記事・お問い合わせデータは Supabase に保存します。以下の手順で設定してください。
