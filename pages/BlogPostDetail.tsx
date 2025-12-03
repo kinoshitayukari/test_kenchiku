@@ -63,6 +63,7 @@ const BlogPostDetail: React.FC = () => {
   }
 
   return (
+    <>
     <div className="bg-[#fdfbf7] min-h-screen pb-20">
 
       {/* Breadcrumbs */}
@@ -120,7 +121,7 @@ const BlogPostDetail: React.FC = () => {
 
         {/* Main Content */}
         <div
-          className="prose prose-lg max-w-none text-gray-700 mb-12"
+          className="blog-article-content text-gray-800 leading-8 mb-12"
           dangerouslySetInnerHTML={{ __html: post.content || '' }}
         >
         </div>
@@ -238,6 +239,104 @@ const BlogPostDetail: React.FC = () => {
       </div>
 
     </div>
+
+      <style>{`
+        .blog-article-content h2 {
+          font-size: 1.7rem;
+          font-weight: 800;
+          margin-top: 1.5rem;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.4rem;
+          border-bottom: 3px solid #ea580c;
+        }
+
+        .blog-article-content h3 {
+          font-size: 1.25rem;
+          font-weight: 800;
+          margin-top: 1.2rem;
+          margin-bottom: 0.35rem;
+          border-left: 6px solid #ea580c;
+          padding-left: 0.6rem;
+        }
+
+        .blog-article-content h4 {
+          font-size: 1.05rem;
+          font-weight: 700;
+          margin-top: 1rem;
+          margin-bottom: 0.25rem;
+          color: #ea580c;
+        }
+
+        .blog-article-content ul {
+          list-style: disc;
+          padding-left: 1.4rem;
+          margin: 0.5rem 0;
+        }
+
+        .blog-article-content ol {
+          list-style: decimal;
+          padding-left: 1.4rem;
+          margin: 0.5rem 0;
+        }
+
+        .blog-article-content li {
+          margin-bottom: 0.35rem;
+        }
+
+        .blog-article-content p {
+          margin: 0.55rem 0;
+        }
+
+        .blog-article-content blockquote {
+          border-left: 4px solid #fed7aa;
+          padding-left: 1rem;
+          color: #4b5563;
+          background: #fff7ed;
+          border-radius: 0.25rem;
+          padding-top: 0.75rem;
+          padding-bottom: 0.75rem;
+          margin: 1rem 0;
+        }
+
+        .blog-article-content img {
+          border-radius: 16px;
+          width: 100%;
+          height: auto;
+          box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+          margin: 1rem 0;
+        }
+
+        .blog-article-content .blog-inline-image {
+          margin: 1.25rem 0;
+          text-align: center;
+        }
+
+        .blog-article-content .blog-inline-image img {
+          max-width: 100%;
+          display: inline-block;
+        }
+
+        .blog-article-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1rem 0;
+        }
+
+        .blog-article-content th,
+        .blog-article-content td {
+          border: 1px solid #e5e7eb;
+          padding: 0.75rem;
+        }
+
+        .blog-article-content pre,
+        .blog-article-content code {
+          background: #f5f5f5;
+          border-radius: 6px;
+          padding: 0.2rem 0.5rem;
+          font-size: 0.95rem;
+        }
+      `}</style>
+    </>
   );
 };
 
