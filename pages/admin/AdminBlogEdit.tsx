@@ -270,14 +270,34 @@ const AdminBlogEdit: React.FC = () => {
 
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">本文 (HTML可)</label>
-            <textarea
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-              rows={10}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
-              placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
-            ></textarea>
+            <div className="grid md:grid-cols-2 gap-4">
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+                rows={14}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
+                placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
+              ></textarea>
+
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-inner">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">プレビュー</p>
+                    <p className="text-sm text-gray-600">見出しやリストのスタイルを確認できます</p>
+                  </div>
+                  <span className="text-[11px] px-2 py-1 rounded-full bg-white border border-gray-200 text-gray-500">HTML対応</span>
+                </div>
+                <div
+                  className="blog-preview-content text-gray-800 text-sm leading-7 space-y-3"
+                  dangerouslySetInnerHTML={{
+                    __html: formData.content?.trim()
+                      ? formData.content
+                      : '<p class="text-gray-400">ここに本文のプレビューが表示されます。</p>'
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="col-span-2">
@@ -321,6 +341,54 @@ const AdminBlogEdit: React.FC = () => {
           </button>
         </div>
       </form>
+
+      <style>{`
+        .blog-preview-content h2 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-top: 1.25rem;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.35rem;
+          border-bottom: 3px solid #ea580c;
+        }
+
+        .blog-preview-content h3 {
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-top: 1rem;
+          margin-bottom: 0.35rem;
+          border-left: 4px solid #ea580c;
+          padding-left: 0.5rem;
+        }
+
+        .blog-preview-content h4 {
+          font-size: 1rem;
+          font-weight: 700;
+          margin-top: 0.85rem;
+          margin-bottom: 0.25rem;
+          color: #ea580c;
+        }
+
+        .blog-preview-content ul {
+          list-style: disc;
+          padding-left: 1.25rem;
+          margin-top: 0.35rem;
+        }
+
+        .blog-preview-content ol {
+          list-style: decimal;
+          padding-left: 1.25rem;
+          margin-top: 0.35rem;
+        }
+
+        .blog-preview-content li {
+          margin-bottom: 0.25rem;
+        }
+
+        .blog-preview-content p {
+          margin: 0.35rem 0;
+        }
+      `}</style>
     </div>
   );
 };
