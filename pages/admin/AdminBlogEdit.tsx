@@ -32,8 +32,10 @@ const AdminBlogEdit: React.FC = () => {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
   const [geminiApiKey, setGeminiApiKey] = useState('');
   const [generationKeyword, setGenerationKeyword] = useState('');
+  const [regenerationPrompt, setRegenerationPrompt] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [editorMode, setEditorMode] = useState<'visual' | 'html'>('visual');
 
@@ -123,6 +125,53 @@ const AdminBlogEdit: React.FC = () => {
       setError(err instanceof Error ? err.message : '記事の自動生成に失敗しました。');
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleRegenerateContent = async () => {
+    setRegenerating(true);
+    setError(null);
+
+    try {
+      const regenerated = await geminiService.regenerateBlogContent(
+        geminiApiKey,
+        regenerationPrompt,
+        formData
+      );
+
+      setFormData((prev) => {
+        const next = { ...prev } as Partial<BlogPost>;
+
+        if (regenerated.title !== undefined) next.title = regenerated.title;
+        if (regenerated.excerpt !== undefined) next.excerpt = regenerated.excerpt;
+        if (regenerated.summary !== undefined) next.summary = regenerated.summary;
+        if (regenerated.content !== undefined) next.content = regenerated.content;
+        if (regenerated.readTime !== undefined) next.readTime = regenerated.readTime;
+        if (regenerated.image !== undefined) next.image = regenerated.image;
+        if (regenerated.tags !== undefined) next.tags = regenerated.tags;
+        if (regenerated.checkpoints !== undefined) next.checkpoints = regenerated.checkpoints;
+
+        return next;
+      });
+
+      if (regenerated.checkpoints) {
+        setCheckpointsStr(regenerated.checkpoints.join('\n'));
+      }
+
+      if (regenerated.tags) {
+        setTagsStr(regenerated.tags.join(', '));
+      }
+
+      try {
+        localStorage.setItem('geminiApiKey', geminiApiKey);
+      } catch (storageError) {
+        console.error('Failed to save Gemini API key', storageError);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : '記事の再生成に失敗しました。');
+    } finally {
+      setRegenerating(false);
     }
   };
 
@@ -538,6 +587,44 @@ const AdminBlogEdit: React.FC = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none"
               placeholder="キッチン, リフォーム, 節約"
             />
+          </div>
+        </div>
+
+        <div className="mt-6 border border-indigo-100 rounded-xl bg-indigo-50/50 p-4 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h4 className="text-base font-semibold text-gray-800">記事をAIで再生成</h4>
+              <p className="text-sm text-gray-500">保存前後を問わず、プロンプトを入力して本文や要約をブラッシュアップできます。</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleRegenerateContent}
+              disabled={regenerating || !geminiApiKey || !regenerationPrompt}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-60 whitespace-nowrap"
+            >
+              {regenerating ? '再生成中...' : 'Geminiで再生成'}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">再生成用プロンプト</label>
+              <textarea
+                value={regenerationPrompt}
+                onChange={(e) => setRegenerationPrompt(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 outline-none"
+                placeholder="例: 専門家の視点を追加し、まとめを短くしてください"
+              ></textarea>
+            </div>
+            <div className="bg-white border border-indigo-100 rounded-lg p-3 text-sm text-gray-600 shadow-sm">
+              <p className="font-semibold text-gray-800 mb-1">使い方のヒント</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>口調や読み手を指定してトーンを調整</li>
+                <li>不足している見出しやFAQの追加を指示</li>
+                <li>タグや要約を短く・長くなど細かく依頼</li>
+              </ul>
+            </div>
           </div>
         </div>
 
