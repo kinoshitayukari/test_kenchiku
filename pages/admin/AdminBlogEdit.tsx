@@ -40,6 +40,7 @@ const AdminBlogEdit: React.FC = () => {
   const contentEditableRef = useRef<HTMLDivElement>(null);
   const contentImageInputRef = useRef<HTMLInputElement>(null);
   const heroImageInputRef = useRef<HTMLInputElement>(null);
+  const htmlTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     try {
@@ -167,13 +168,56 @@ const AdminBlogEdit: React.FC = () => {
     const reader = new FileReader();
     reader.onload = () => {
       const imgTag = `<figure class="blog-inline-image"><img src="${reader.result}" alt="" /><figcaption class="text-sm text-gray-500">キャプションを入力</figcaption></figure>`;
-      setFormData(prev => {
-        const updatedContent = `${prev.content || ''}\n${imgTag}`;
-        if (contentEditableRef.current) {
-          contentEditableRef.current.innerHTML = updatedContent;
+
+      const insertIntoHtmlTextarea = () => {
+        if (!htmlTextareaRef.current) return false;
+        const textarea = htmlTextareaRef.current;
+        const { selectionStart, selectionEnd, value } = textarea;
+        const nextValue = `${value.slice(0, selectionStart)}${imgTag}${value.slice(selectionEnd)}`;
+        textarea.value = nextValue;
+        setFormData(prev => ({ ...prev, content: nextValue }));
+        const cursor = selectionStart + imgTag.length;
+        requestAnimationFrame(() => textarea.setSelectionRange(cursor, cursor));
+        return true;
+      };
+
+      const insertIntoContentEditable = () => {
+        if (!contentEditableRef.current) return false;
+        const editor = contentEditableRef.current;
+        editor.focus();
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return false;
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const temp = document.createElement('div');
+        temp.innerHTML = imgTag;
+        const fragment = document.createDocumentFragment();
+        let node: ChildNode | null;
+        while ((node = temp.firstChild)) {
+          fragment.appendChild(node);
         }
-        return { ...prev, content: updatedContent };
-      });
+        range.insertNode(fragment);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        setFormData(prev => ({ ...prev, content: editor.innerHTML }));
+        return true;
+      };
+
+      const inserted = editorMode === 'html' ? insertIntoHtmlTextarea() : insertIntoContentEditable();
+
+      if (!inserted) {
+        setFormData(prev => {
+          const updatedContent = `${prev.content || ''}\n${imgTag}`;
+          if (contentEditableRef.current) {
+            contentEditableRef.current.innerHTML = updatedContent;
+          }
+          if (htmlTextareaRef.current) {
+            htmlTextareaRef.current.value = updatedContent;
+          }
+          return { ...prev, content: updatedContent };
+        });
+      }
     };
     reader.readAsDataURL(file);
   };
@@ -364,46 +408,27 @@ const AdminBlogEdit: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4 p-4">
-                <div>
-                  {editorMode === 'visual' ? (
-                    <div
-                      ref={contentEditableRef}
-                      contentEditable
-                      className="blog-preview-content min-h-[280px] p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange"
-                      onInput={(e) =>
-                        setFormData(prev => ({ ...prev, content: (e.target as HTMLDivElement).innerHTML }))
-                      }
-                    />
-                  ) : (
-                    <textarea
-                      name="content"
-                      value={formData.content}
-                      onChange={handleChange}
-                      rows={14}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
-                      placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
-                    ></textarea>
-                  )}
-                </div>
-
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-inner">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">プレビュー</p>
-                      <p className="text-sm text-gray-600">見出しやリストのスタイルを確認できます</p>
-                    </div>
-                    <span className="text-[11px] px-2 py-1 rounded-full bg-white border border-gray-200 text-gray-500">HTML対応</span>
-                  </div>
+              <div className="p-4">
+                {editorMode === 'visual' ? (
                   <div
-                    className="blog-preview-content text-gray-800 text-sm leading-7 space-y-3"
-                    dangerouslySetInnerHTML={{
-                      __html: formData.content?.trim()
-                        ? formData.content
-                        : '<p class="text-gray-400">ここに本文のプレビューが表示されます。</p>'
-                    }}
+                    ref={contentEditableRef}
+                    contentEditable
+                    className="blog-preview-content min-h-[320px] p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                    onInput={(e) =>
+                      setFormData(prev => ({ ...prev, content: (e.target as HTMLDivElement).innerHTML }))
+                    }
                   />
-                </div>
+                ) : (
+                  <textarea
+                    ref={htmlTextareaRef}
+                    name="content"
+                    value={formData.content}
+                    onChange={handleChange}
+                    rows={16}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
+                    placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
+                  ></textarea>
+                )}
               </div>
             </div>
         </div>
