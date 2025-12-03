@@ -16,7 +16,7 @@ interface GeminiDraftResponse {
 // version v1beta. Use the base name so generateContent works reliably.
 const GEMINI_MODEL = 'gemini-2.5-flash';
 
-const buildPrompt = (keyword: string) => `以下のキーワードを中心に、住宅リフォーム会社のブログ記事の下書きを日本語で作成してください。\n\nキーワード: ${keyword}\n\n以下のJSON形式のみで出力してください。本文はHTMLの段落や小見出しを使い、装飾はシンプルにしてください。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分"\n}`;
+const buildPrompt = (keyword: string) => `以下のキーワードを中心に、住宅リフォーム会社のブログ記事の下書きを日本語で作成してください。\n\nキーワード: ${keyword}\n\n以下のJSON形式のみで出力してください。本文はHTMLで、読みやすさのために必ず\n- h2の大見出しを3〜5本\n- h3の小見出しを必要に応じて挿入\n- 各見出しの下に<p>で段落\n- 箇条書きがあれば<ul><li>を使用\nといったシンプルな構造を付けてください。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<h2>大見出し</h2><p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分"\n}`;
 
 const normalizeArray = (value: string[] | string | undefined): string[] => {
   if (Array.isArray(value)) return value.filter((v) => !!v).map((v) => v.toString());

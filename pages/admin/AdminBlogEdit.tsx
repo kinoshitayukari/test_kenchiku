@@ -276,7 +276,7 @@ const AdminBlogEdit: React.FC = () => {
               onChange={handleChange}
               rows={10}
               className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
-              placeholder="<p>ここに本文を入力...</p>"
+              placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
             ></textarea>
           </div>
 
