@@ -21,7 +21,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
 
 ## 画像を追加したい場合（`public/` の活用）
 
-デプロイやビルドを挟まずに配信したい画像は、プロジェクト直下に `public/` ディレクトリを作成してアップロードします。GitHub の Web UI から直接追加する場合は、`public/` に移動して **Add file > Upload files** で画像をドラッグ＆ドロップしてください。`src`/`pages` からはルート相対パス（例: `/images/example.png`）で参照できます。
+デプロイやビルドを挟まずに配信したい画像は、プロジェクト直下に `public/` ディレクトリを作成してアップロードします。GitHub の Web UI から直接追加する場合は、`public/` に移動して **Add file > Upload files** で画像をドラッグ＆ドロップしてください。`src`/`pages` からはルート相対パス（例: `/images/example.png`）で参照できます。`public/images/` では半角英数＋ハイフンで、サイズが分かるファイル名（例: `hero-kitchen-1920w.webp`）にすると管理しやすいです。
 
 ## Supabase セットアップ
 
