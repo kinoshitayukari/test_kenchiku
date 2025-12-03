@@ -11,6 +11,8 @@ interface GeminiDraftResponse {
   image?: string;
 }
 
+const GEMINI_MODEL = 'gemini-2.5-flash-001';
+
 const buildPrompt = (keyword: string) => `以下のキーワードを中心に、住宅リフォーム会社のブログ記事の下書きを日本語で作成してください。\n\nキーワード: ${keyword}\n\n以下のJSON形式のみで出力してください。本文はHTMLの段落や小見出しを使い、装飾はシンプルにしてください。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分"\n}`;
 
 const normalizeArray = (value: string[] | string | undefined): string[] => {
@@ -22,6 +24,15 @@ const normalizeArray = (value: string[] | string | undefined): string[] => {
       .filter((v) => v !== '');
   }
   return [];
+};
+
+const extractJsonText = (text: string) => {
+  const trimmed = text.trim();
+  if (trimmed.startsWith('```')) {
+    const noFence = trimmed.replace(/^```[a-zA-Z]*\n?/, '').replace(/```$/, '');
+    return noFence.trim();
+  }
+  return trimmed;
 };
 
 export const geminiService = {
@@ -37,7 +48,7 @@ export const geminiService = {
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,7 +67,17 @@ export const geminiService = {
     );
 
     if (!response.ok) {
-      throw new Error('AI生成リクエストに失敗しました。APIキーと利用状況をご確認ください。');
+      let message = 'AI生成リクエストに失敗しました。APIキーと利用状況をご確認ください。';
+      try {
+        const errorBody = await response.json();
+        const apiMessage = errorBody?.error?.message as string | undefined;
+        if (apiMessage) {
+          message += ` (${apiMessage})`;
+        }
+      } catch (parseError) {
+        console.error('Failed to parse Gemini error response', parseError);
+      }
+      throw new Error(message);
     }
 
     const data = await response.json();
@@ -68,7 +89,7 @@ export const geminiService = {
 
     let parsed: GeminiDraftResponse;
     try {
-      parsed = JSON.parse(text);
+      parsed = JSON.parse(extractJsonText(text));
     } catch (err) {
       console.error('Failed to parse Gemini response', err, text);
       throw new Error('生成結果の解析に失敗しました。出力形式を確認してください。');
