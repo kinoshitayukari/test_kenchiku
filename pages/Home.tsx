@@ -42,20 +42,17 @@ const Home: React.FC = () => {
     {
       title: 'キッチンリフォーム',
       description: '開放的なアイランドキッチンで家族団らんの時間をもっと快適に。',
-      image:
-        'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=80',
+      image: '/images/example_kichen.jpg',
     },
     {
       title: '浴室リフォーム',
       description: 'ホテルライクなバスルームで一日の疲れを癒やすリラックスタイムを。',
-      image:
-        'https://images.unsplash.com/photo-1616594038850-67cb2c13f524?auto=format&fit=crop&w=1400&q=80',
+      image: '/images/example_water.jpg',
     },
     {
       title: 'トイレリフォーム',
       description: '収納と間接照明を組み合わせた、清潔感のあるパウダールーム。',
-      image:
-        'https://images.unsplash.com/photo-1617099390840-9b0e4d52f7e3?auto=format&fit=crop&w=1400&q=80',
+      image: '/images/example_toilet.jpg',
     },
   ];
 
@@ -100,7 +97,7 @@ const Home: React.FC = () => {
 
              {/* Hero Image */}
             <img
-              src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80"
+              src="/images/hero-livingroom-1920w. webp.jpg"
               alt="Spacious and bright renovated kitchen space"
               className="w-full h-full object-cover rounded-3xl shadow-2xl"
             />
