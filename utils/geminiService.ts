@@ -16,7 +16,7 @@ interface GeminiDraftResponse {
 // version v1beta. Use the base name so generateContent works reliably.
 const GEMINI_MODEL = 'gemini-2.5-flash';
 
-const buildPrompt = (keyword: string) => `以下のキーワードを中心に、住宅リフォーム会社のブログ記事の下書きを日本語で作成してください。\n\nキーワード: ${keyword}\n\n以下のJSON形式のみで出力してください。本文はHTMLで、読みやすさのために必ず\n- h2の大見出しを3〜5本\n- h3の小見出しを必要に応じて挿入\n- 各見出しの下に<p>で段落\n- 箇条書きがあれば<ul><li>を使用\nといったシンプルな構造を付けてください。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<h2>大見出し</h2><p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分"\n}`;
+const buildPrompt = (keyword: string) => `以下のキーワードを中心に、住宅リフォーム会社のブログ記事の下書きを日本語で作成してください。\n\nキーワード: ${keyword}\n\n以下のJSON形式のみで出力してください。本文はHTMLで、読みやすさのために必ず\n- h2の大見出しを3〜5本\n- h3の小見出しを必要に応じて挿入\n- 各見出しの下に<p>で段落\n- 箇条書きがあれば<ul><li>を使用\nといったシンプルな構造を付けてください。画像はURL文字列のみで、バイト列やBase64は含めないでください。余計な文章や説明は不要です。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<h2>大見出し</h2><p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分"\n}`;
 
 const buildRegenerationPrompt = (instruction: string, currentPost: Partial<BlogPost>) => {
   const serialized = {
@@ -30,7 +30,7 @@ const buildRegenerationPrompt = (instruction: string, currentPost: Partial<BlogP
     category: currentPost.category
   };
 
-  return `以下の既存記事を、追加の要望に沿って日本語でブラッシュアップしてください。見出し構成とHTML形式は維持しつつ、内容をより良くしてください。\n\n[要望]\n${instruction}\n\n[既存記事]\n${JSON.stringify(serialized, null, 2)}\n\n以下のJSON形式のみで返してください。フィールド名は変更せず、値が不要なら空文字や空配列で構いません。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<h2>大見出し</h2><p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分",\n  "image": "任意の画像URL"\n}`;
+  return `以下の既存記事を、追加の要望に沿って日本語でブラッシュアップしてください。見出し構成とHTML形式は維持しつつ、内容をより良くしてください。\n\n[要望]\n${instruction}\n\n[既存記事]\n${JSON.stringify(serialized, null, 2)}\n\n以下のJSON形式のみで返してください。フィールド名は変更せず、値が不要なら空文字や空配列で構いません。画像はURL文字列のみを許可し、Base64やバイト列は含めないでください。JSON以外の文章やコードブロックを付けないでください。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<h2>大見出し</h2><p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分",\n  "image": "任意の画像URL"\n}`;
 };
 
 const normalizeArray = (value: string[] | string | undefined): string[] => {
@@ -46,11 +46,28 @@ const normalizeArray = (value: string[] | string | undefined): string[] => {
 
 const extractJsonText = (text: string) => {
   const trimmed = text.trim();
+
   if (trimmed.startsWith('```')) {
     const noFence = trimmed.replace(/^```[a-zA-Z]*\n?/, '').replace(/```$/, '');
     return noFence.trim();
   }
+
+  // Some responses prepend explanations. Try to capture the first JSON object.
+  const jsonLike = trimmed.match(/\{[\s\S]*\}/);
+  if (jsonLike) {
+    return jsonLike[0].trim();
+  }
+
   return trimmed;
+};
+
+const parseJsonResponse = (text: string, errorMessage: string): GeminiDraftResponse => {
+  try {
+    return JSON.parse(extractJsonText(text));
+  } catch (err) {
+    console.error('Failed to parse Gemini response', err, text);
+    throw new Error(errorMessage);
+  }
 };
 
 export const geminiService = {
@@ -105,13 +122,7 @@ export const geminiService = {
       throw new Error('生成結果が空でした。キーワードを変えてお試しください。');
     }
 
-    let parsed: GeminiDraftResponse;
-    try {
-      parsed = JSON.parse(extractJsonText(text));
-    } catch (err) {
-      console.error('Failed to parse Gemini response', err, text);
-      throw new Error('生成結果の解析に失敗しました。出力形式を確認してください。');
-    }
+    const parsed = parseJsonResponse(text, '生成結果の解析に失敗しました。出力形式を確認してください。');
 
     const tags = normalizeArray(parsed.tags);
     const checkpoints = normalizeArray(parsed.checkpoints);
@@ -181,13 +192,7 @@ export const geminiService = {
       throw new Error('再生成結果が空でした。プロンプトを調整して再度お試しください。');
     }
 
-    let parsed: GeminiDraftResponse;
-    try {
-      parsed = JSON.parse(extractJsonText(text));
-    } catch (err) {
-      console.error('Failed to parse Gemini regeneration response', err, text);
-      throw new Error('再生成結果の解析に失敗しました。出力形式を確認してください。');
-    }
+    const parsed = parseJsonResponse(text, '再生成結果の解析に失敗しました。出力形式を確認してください。');
 
     const tags = normalizeArray(parsed.tags);
     const checkpoints = normalizeArray(parsed.checkpoints);
