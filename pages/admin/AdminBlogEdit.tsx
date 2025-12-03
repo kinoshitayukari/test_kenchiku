@@ -41,6 +41,7 @@ const AdminBlogEdit: React.FC = () => {
   const contentImageInputRef = useRef<HTMLInputElement>(null);
   const heroImageInputRef = useRef<HTMLInputElement>(null);
   const htmlTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const selectedImageRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     try {
@@ -228,6 +229,77 @@ const AdminBlogEdit: React.FC = () => {
     }
   }, [editorMode, formData.content]);
 
+  const handleSelectImage = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    const imageContainer = target.closest('.blog-inline-image') as HTMLElement | null;
+    const standaloneImage = target.closest('img') as HTMLElement | null;
+    const resolvedTarget = imageContainer || standaloneImage;
+
+    if (selectedImageRef.current && selectedImageRef.current !== resolvedTarget) {
+      selectedImageRef.current.classList.remove('selected-image');
+    }
+
+    if (resolvedTarget) {
+      resolvedTarget.classList.add('selected-image');
+      selectedImageRef.current = resolvedTarget;
+    } else {
+      if (selectedImageRef.current) {
+        selectedImageRef.current.classList.remove('selected-image');
+      }
+      selectedImageRef.current = null;
+    }
+  };
+
+  const handleRemoveSelectedImage = () => {
+    if (editorMode === 'visual') {
+      if (selectedImageRef.current) {
+        const removable = selectedImageRef.current.closest('.blog-inline-image') || selectedImageRef.current;
+        removable.remove();
+        if (contentEditableRef.current) {
+          setFormData(prev => ({ ...prev, content: contentEditableRef.current!.innerHTML }));
+          if (htmlTextareaRef.current) {
+            htmlTextareaRef.current.value = contentEditableRef.current.innerHTML;
+          }
+        }
+        selectedImageRef.current = null;
+      }
+      return;
+    }
+
+    if (htmlTextareaRef.current) {
+      const textarea = htmlTextareaRef.current;
+      const { selectionStart, selectionEnd, value } = textarea;
+      let nextValue = value;
+
+      if (selectionStart !== selectionEnd) {
+        nextValue = `${value.slice(0, selectionStart)}${value.slice(selectionEnd)}`;
+      } else {
+        const figureStart = value.lastIndexOf('<figure', selectionStart);
+        const figureEnd = value.indexOf('</figure>', selectionStart);
+        const imgStart = value.lastIndexOf('<img', selectionStart);
+        const imgEnd = value.indexOf('>', selectionStart);
+
+        if (figureStart !== -1 && figureEnd !== -1 && figureStart <= selectionStart && figureEnd >= selectionStart) {
+          nextValue = `${value.slice(0, figureStart)}${value.slice(figureEnd + 9)}`;
+        } else if (imgStart !== -1 && imgEnd !== -1 && imgStart <= selectionStart) {
+          nextValue = `${value.slice(0, imgStart)}${value.slice(imgEnd + 1)}`;
+        } else {
+          return;
+        }
+      }
+
+      textarea.value = nextValue;
+      setFormData(prev => ({ ...prev, content: nextValue }));
+      requestAnimationFrame(() => {
+        textarea.setSelectionRange(selectionStart, selectionStart);
+      });
+
+      if (contentEditableRef.current && editorMode === 'html') {
+        contentEditableRef.current.innerHTML = nextValue;
+      }
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">{isEdit ? 'ブログ記事編集' : '新規記事作成'}</h2>
@@ -397,6 +469,13 @@ const AdminBlogEdit: React.FC = () => {
                   >
                     📷 本文に画像を挿入
                   </button>
+                  <button
+                    type="button"
+                    onClick={handleRemoveSelectedImage}
+                    className="px-3 py-1.5 rounded border border-red-100 bg-white hover:bg-red-50 text-red-600 transition-colors"
+                  >
+                    🗑️ 選択した画像を削除
+                  </button>
                   <input
                     ref={contentImageInputRef}
                     type="file"
@@ -414,6 +493,7 @@ const AdminBlogEdit: React.FC = () => {
                     ref={contentEditableRef}
                     contentEditable
                     className="blog-preview-content min-h-[320px] p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                    onClick={handleSelectImage}
                     onInput={(e) =>
                       setFormData(prev => ({ ...prev, content: (e.target as HTMLDivElement).innerHTML }))
                     }
@@ -549,6 +629,12 @@ const AdminBlogEdit: React.FC = () => {
         .blog-preview-content .blog-inline-image img {
           max-width: 100%;
           display: inline-block;
+        }
+
+        .blog-preview-content .selected-image {
+          outline: 3px solid #ea580c;
+          outline-offset: 4px;
+          background: #fff7ed;
         }
 
         .blog-preview-content table {

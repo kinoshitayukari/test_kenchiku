@@ -4,6 +4,12 @@ import { Clock, Check, ChevronRight, Twitter, Facebook, Linkedin, ArrowRight, Li
 import { blogService } from '../utils/blogService';
 import { BlogPost } from '../types';
 
+type TocItem = {
+  id: string;
+  text: string;
+  level: 'h2' | 'h3' | 'h4';
+};
+
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -11,6 +17,8 @@ const BlogPostDetail: React.FC = () => {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tocItems, setTocItems] = useState<TocItem[]>([]);
+  const [processedContent, setProcessedContent] = useState('');
 
   useEffect(() => {
     const loadPost = async () => {
@@ -42,6 +50,37 @@ const BlogPostDetail: React.FC = () => {
 
     loadPost();
   }, [id]);
+
+  useEffect(() => {
+    if (!post?.content) {
+      setTocItems([]);
+      setProcessedContent(post?.content || '');
+      return;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(post.content, 'text/html');
+    const headings = Array.from(doc.querySelectorAll('h2, h3, h4')) as HTMLHeadingElement[];
+    const idCounts: Record<string, number> = {};
+
+    const items = headings.map((heading, index) => {
+      const baseId = heading.id || heading.textContent?.trim().toLowerCase().replace(/[^a-z0-9\u3040-\u30ff\u4e00-\u9faf]+/gi, '-') || `section-${index}`;
+      const count = idCounts[baseId] || 0;
+      idCounts[baseId] = count + 1;
+      const uniqueId = count === 0 ? baseId : `${baseId}-${count}`;
+
+      heading.id = uniqueId;
+
+      return {
+        id: uniqueId,
+        text: heading.textContent?.trim() || `セクション ${index + 1}`,
+        level: heading.tagName.toLowerCase() as TocItem['level']
+      };
+    });
+
+    setTocItems(items);
+    setProcessedContent(doc.body.innerHTML);
+  }, [post]);
 
   if (loading) {
     return (
@@ -105,6 +144,37 @@ const BlogPostDetail: React.FC = () => {
           </div>
         </div>
 
+        {/* Table of Contents */}
+        {tocItems.length > 0 && (
+          <div className="mb-10">
+            <div className="bg-white border border-orange-100 rounded-3xl shadow-sm p-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/70 via-white to-orange-100/40 pointer-events-none"></div>
+              <div className="relative flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-brand-orange text-white flex items-center justify-center font-bold shadow-lg">目次</div>
+                <div>
+                  <p className="text-sm text-gray-500">この記事で扱うトピック</p>
+                  <h2 className="text-lg font-bold text-gray-900">Heading Highlights</h2>
+                </div>
+              </div>
+              <ol className="relative z-10 space-y-2">
+                {tocItems.map(item => (
+                  <li key={item.id} className="group">
+                    <a
+                      href={`#${item.id}`}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors duration-150 hover:bg-orange-50 ${
+                        item.level === 'h2' ? 'font-semibold text-gray-900' : 'text-gray-600'
+                      } ${item.level === 'h3' ? 'ml-3' : ''} ${item.level === 'h4' ? 'ml-6 text-sm' : ''}`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-brand-orange/80 group-hover:bg-brand-orange"></span>
+                      <span className="line-clamp-2">{item.text}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )}
+
         {/* Hero Image */}
         <div className="rounded-3xl overflow-hidden shadow-lg mb-12 aspect-video">
           <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
@@ -122,7 +192,7 @@ const BlogPostDetail: React.FC = () => {
         {/* Main Content */}
         <div
           className="blog-article-content text-gray-800 leading-8 mb-12"
-          dangerouslySetInnerHTML={{ __html: post.content || '' }}
+          dangerouslySetInnerHTML={{ __html: processedContent || post.content || '' }}
         >
         </div>
 
@@ -248,6 +318,7 @@ const BlogPostDetail: React.FC = () => {
           margin-bottom: 0.5rem;
           padding-bottom: 0.4rem;
           border-bottom: 3px solid #ea580c;
+          scroll-margin-top: 90px;
         }
 
         .blog-article-content h3 {
@@ -257,6 +328,7 @@ const BlogPostDetail: React.FC = () => {
           margin-bottom: 0.35rem;
           border-left: 6px solid #ea580c;
           padding-left: 0.6rem;
+          scroll-margin-top: 90px;
         }
 
         .blog-article-content h4 {
@@ -265,6 +337,7 @@ const BlogPostDetail: React.FC = () => {
           margin-top: 1rem;
           margin-bottom: 0.25rem;
           color: #ea580c;
+          scroll-margin-top: 90px;
         }
 
         .blog-article-content ul {
