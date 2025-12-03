@@ -11,7 +11,10 @@ interface GeminiDraftResponse {
   image?: string;
 }
 
-const GEMINI_MODEL = 'gemini-2.5-flash-001';
+// The v1beta generateContent endpoint only supports the base model ID without the
+// version suffix. See error: models/gemini-2.5-flash-001 is not found for API
+// version v1beta. Use the base name so generateContent works reliably.
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 const buildPrompt = (keyword: string) => `以下のキーワードを中心に、住宅リフォーム会社のブログ記事の下書きを日本語で作成してください。\n\nキーワード: ${keyword}\n\n以下のJSON形式のみで出力してください。本文はHTMLの段落や小見出しを使い、装飾はシンプルにしてください。\n{\n  "title": "タイトル",\n  "excerpt": "一覧用の短い抜粋",\n  "summary": "記事冒頭に掲載する要約",\n  "content": "<p>本文をHTMLで</p>",\n  "tags": ["タグ1", "タグ2"],\n  "checkpoints": ["読者へのポイント1", "ポイント2"],\n  "readTime": "5分"\n}`;
 
