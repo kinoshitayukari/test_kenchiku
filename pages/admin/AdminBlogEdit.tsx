@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { blogService } from '../../utils/blogService';
 import { BlogPost } from '../../types';
 import { BLOG_CATEGORIES } from '../../constants';
+import { geminiService } from '../../utils/geminiService';
 
 const AdminBlogEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,9 +31,21 @@ const AdminBlogEdit: React.FC = () => {
   const [tagsStr, setTagsStr] = useState('');
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [geminiApiKey, setGeminiApiKey] = useState('');
+  const [generationKeyword, setGenerationKeyword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    try {
+      const savedKey = localStorage.getItem('geminiApiKey');
+      if (savedKey) {
+        setGeminiApiKey(savedKey);
+      }
+    } catch (storageError) {
+      console.error('Failed to load Gemini API key from storage', storageError);
+    }
+
     if (isEdit && id) {
       const fetchPost = async () => {
         try {
@@ -60,6 +73,49 @@ const AdminBlogEdit: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleGenerateDraft = async () => {
+    setGenerating(true);
+    setError(null);
+
+    try {
+      const draft = await geminiService.generateBlogDraft(geminiApiKey, generationKeyword);
+      setFormData(prev => {
+        const next = { ...prev } as Partial<BlogPost>;
+
+        if (draft.title) next.title = draft.title;
+        if (draft.excerpt) next.excerpt = draft.excerpt;
+        if (draft.summary) next.summary = draft.summary;
+        if (draft.content) next.content = draft.content;
+        if (draft.readTime) next.readTime = draft.readTime;
+        if (draft.image) next.image = draft.image;
+        if (!prev.date) {
+          next.date = new Date().toISOString().split('T')[0];
+        }
+
+        return next;
+      });
+
+      if (draft.checkpoints?.length) {
+        setCheckpointsStr(draft.checkpoints.join('\n'));
+      }
+
+      if (draft.tags?.length) {
+        setTagsStr(draft.tags.join(', '));
+      }
+
+      try {
+        localStorage.setItem('geminiApiKey', geminiApiKey);
+      } catch (storageError) {
+        console.error('Failed to save Gemini API key', storageError);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : '記事の自動生成に失敗しました。');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,6 +151,48 @@ const AdminBlogEdit: React.FC = () => {
       {error && (
         <div className="bg-red-50 text-red-700 border border-red-100 rounded-lg p-4 mb-4">{error}</div>
       )}
+
+      <div className="bg-white p-6 rounded-lg shadow mb-6 space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">Geminiで下書きを自動生成</h3>
+            <p className="text-sm text-gray-500">キーワードを入力すると記事の叩きを作成します。APIキーはブラウザにのみ保存されます。</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleGenerateDraft}
+            disabled={generating || !geminiApiKey || !generationKeyword}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-60"
+          >
+            {generating ? '生成中...' : 'AIで下書きを作成'}
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Gemini APIキー</label>
+            <input
+              type="password"
+              value={geminiApiKey}
+              onChange={(e) => setGeminiApiKey(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 outline-none"
+              placeholder="AIza..."
+            />
+            <p className="text-xs text-gray-400 mt-1">※ ブラウザにのみ保存され、サーバーには送信されません。</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">生成用キーワード</label>
+            <input
+              type="text"
+              value={generationKeyword}
+              onChange={(e) => setGenerationKeyword(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 outline-none"
+              placeholder="例: キッチンリフォームのコツ"
+            />
+            <p className="text-xs text-gray-400 mt-1">キーワードに合わせたタイトル・本文・タグを提案します。</p>
+          </div>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
