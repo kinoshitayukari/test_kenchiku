@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { blogService } from '../../utils/blogService';
 import { BlogPost } from '../../types';
@@ -35,6 +35,14 @@ const AdminBlogEdit: React.FC = () => {
   const [geminiApiKey, setGeminiApiKey] = useState('');
   const [generationKeyword, setGenerationKeyword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [editorMode, setEditorMode] = useState<'visual' | 'html'>('visual');
+
+  const contentEditableRef = useRef<HTMLDivElement>(null);
+  const contentImageInputRef = useRef<HTMLInputElement>(null);
+  const heroImageInputRef = useRef<HTMLInputElement>(null);
+  const htmlTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const selectedImageRef = useRef<HTMLElement | null>(null);
+  const isTypingRef = useRef(false);
 
   useEffect(() => {
     try {
@@ -144,6 +152,155 @@ const AdminBlogEdit: React.FC = () => {
     }
   };
 
+  const handleHeroImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData(prev => ({ ...prev, image: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleInsertImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imgTag = `<figure class="blog-inline-image"><img src="${reader.result}" alt="" /><figcaption class="text-sm text-gray-500">キャプションを入力</figcaption></figure>`;
+
+      const insertIntoHtmlTextarea = () => {
+        if (!htmlTextareaRef.current) return false;
+        const textarea = htmlTextareaRef.current;
+        const { selectionStart, selectionEnd, value } = textarea;
+        const nextValue = `${value.slice(0, selectionStart)}${imgTag}${value.slice(selectionEnd)}`;
+        textarea.value = nextValue;
+        setFormData(prev => ({ ...prev, content: nextValue }));
+        const cursor = selectionStart + imgTag.length;
+        requestAnimationFrame(() => textarea.setSelectionRange(cursor, cursor));
+        return true;
+      };
+
+      const insertIntoContentEditable = () => {
+        if (!contentEditableRef.current) return false;
+        const editor = contentEditableRef.current;
+        editor.focus();
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return false;
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const temp = document.createElement('div');
+        temp.innerHTML = imgTag;
+        const fragment = document.createDocumentFragment();
+        let node: ChildNode | null;
+        while ((node = temp.firstChild)) {
+          fragment.appendChild(node);
+        }
+        range.insertNode(fragment);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        setFormData(prev => ({ ...prev, content: editor.innerHTML }));
+        return true;
+      };
+
+      const inserted = editorMode === 'html' ? insertIntoHtmlTextarea() : insertIntoContentEditable();
+
+      if (!inserted) {
+        setFormData(prev => {
+          const updatedContent = `${prev.content || ''}\n${imgTag}`;
+          if (contentEditableRef.current) {
+            contentEditableRef.current.innerHTML = updatedContent;
+          }
+          if (htmlTextareaRef.current) {
+            htmlTextareaRef.current.value = updatedContent;
+          }
+          return { ...prev, content: updatedContent };
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  useEffect(() => {
+    if (editorMode === 'visual' && contentEditableRef.current && !isTypingRef.current) {
+      contentEditableRef.current.innerHTML = formData.content || '';
+    }
+  }, [editorMode, formData.content]);
+
+  const handleSelectImage = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    const imageContainer = target.closest('.blog-inline-image') as HTMLElement | null;
+    const standaloneImage = target.closest('img') as HTMLElement | null;
+    const resolvedTarget = imageContainer || standaloneImage;
+
+    if (selectedImageRef.current && selectedImageRef.current !== resolvedTarget) {
+      selectedImageRef.current.classList.remove('selected-image');
+    }
+
+    if (resolvedTarget) {
+      resolvedTarget.classList.add('selected-image');
+      selectedImageRef.current = resolvedTarget;
+    } else {
+      if (selectedImageRef.current) {
+        selectedImageRef.current.classList.remove('selected-image');
+      }
+      selectedImageRef.current = null;
+    }
+  };
+
+  const handleRemoveSelectedImage = () => {
+    if (editorMode === 'visual') {
+      if (selectedImageRef.current) {
+        const removable = selectedImageRef.current.closest('.blog-inline-image') || selectedImageRef.current;
+        removable.remove();
+        if (contentEditableRef.current) {
+          setFormData(prev => ({ ...prev, content: contentEditableRef.current!.innerHTML }));
+          if (htmlTextareaRef.current) {
+            htmlTextareaRef.current.value = contentEditableRef.current.innerHTML;
+          }
+        }
+        selectedImageRef.current = null;
+      }
+      return;
+    }
+
+    if (htmlTextareaRef.current) {
+      const textarea = htmlTextareaRef.current;
+      const { selectionStart, selectionEnd, value } = textarea;
+      let nextValue = value;
+
+      if (selectionStart !== selectionEnd) {
+        nextValue = `${value.slice(0, selectionStart)}${value.slice(selectionEnd)}`;
+      } else {
+        const figureStart = value.lastIndexOf('<figure', selectionStart);
+        const figureEnd = value.indexOf('</figure>', selectionStart);
+        const imgStart = value.lastIndexOf('<img', selectionStart);
+        const imgEnd = value.indexOf('>', selectionStart);
+
+        if (figureStart !== -1 && figureEnd !== -1 && figureStart <= selectionStart && figureEnd >= selectionStart) {
+          nextValue = `${value.slice(0, figureStart)}${value.slice(figureEnd + 9)}`;
+        } else if (imgStart !== -1 && imgEnd !== -1 && imgStart <= selectionStart) {
+          nextValue = `${value.slice(0, imgStart)}${value.slice(imgEnd + 1)}`;
+        } else {
+          return;
+        }
+      }
+
+      textarea.value = nextValue;
+      setFormData(prev => ({ ...prev, content: nextValue }));
+      requestAnimationFrame(() => {
+        textarea.setSelectionRange(selectionStart, selectionStart);
+      });
+
+      if (contentEditableRef.current && editorMode === 'html') {
+        contentEditableRef.current.innerHTML = nextValue;
+      }
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">{isEdit ? 'ブログ記事編集' : '新規記事作成'}</h2>
@@ -243,6 +400,23 @@ const AdminBlogEdit: React.FC = () => {
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none"
             />
+            <div className="flex items-center gap-3 mt-2">
+              <input
+                ref={heroImageInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleHeroImageUpload}
+              />
+              <button
+                type="button"
+                onClick={() => heroImageInputRef.current?.click()}
+                className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+              >
+                画像をアップロード
+              </button>
+              <span className="text-xs text-gray-500">URLかアップロードどちらでも指定できます。</span>
+            </div>
           </div>
 
           <div className="col-span-2">
@@ -268,17 +442,81 @@ const AdminBlogEdit: React.FC = () => {
             ></textarea>
           </div>
 
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">本文 (HTML可)</label>
-            <textarea
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-              rows={10}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
-              placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
-            ></textarea>
-          </div>
+        <div className="col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">本文 (HTML可)</label>
+            <div className="bg-white border border-gray-200 rounded-lg shadow-inner">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-gray-100 bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditorMode('visual')}
+                    className={`px-3 py-1.5 rounded text-sm font-medium ${editorMode === 'visual' ? 'bg-brand-orange text-white shadow' : 'bg-white text-gray-700 border border-gray-200'}`}
+                  >
+                    ビジュアル編集
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditorMode('html')}
+                    className={`px-3 py-1.5 rounded text-sm font-medium ${editorMode === 'html' ? 'bg-brand-orange text-white shadow' : 'bg-white text-gray-700 border border-gray-200'}`}
+                  >
+                    HTML編集
+                  </button>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <button
+                    type="button"
+                    onClick={() => contentImageInputRef.current?.click()}
+                    className="px-3 py-1.5 rounded border border-gray-200 bg-white hover:bg-gray-100 transition-colors"
+                  >
+                    📷 本文に画像を挿入
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRemoveSelectedImage}
+                    className="px-3 py-1.5 rounded border border-red-100 bg-white hover:bg-red-50 text-red-600 transition-colors"
+                  >
+                    🗑️ 選択した画像を削除
+                  </button>
+                  <input
+                    ref={contentImageInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleInsertImage}
+                  />
+                  <span className="text-xs text-gray-500">画像は本文に直接貼り付けられます</span>
+                </div>
+              </div>
+
+              <div className="p-4">
+                {editorMode === 'visual' ? (
+                  <div
+                    ref={contentEditableRef}
+                    contentEditable
+                    className="blog-preview-content min-h-[320px] p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                    onClick={handleSelectImage}
+                    onInput={(e) => {
+                      isTypingRef.current = true;
+                      setFormData(prev => ({ ...prev, content: (e.target as HTMLDivElement).innerHTML }));
+                      requestAnimationFrame(() => {
+                        isTypingRef.current = false;
+                      });
+                    }}
+                  />
+                ) : (
+                  <textarea
+                    ref={htmlTextareaRef}
+                    name="content"
+                    value={formData.content}
+                    onChange={handleChange}
+                    rows={16}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
+                    placeholder="<h2>大見出し</h2>\n<p>段落...</p>\n<h3>小見出し</h3>\n<p>段落...</p>"
+                  ></textarea>
+                )}
+              </div>
+            </div>
+        </div>
 
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">チェックポイント (改行で区切る)</label>
@@ -321,6 +559,109 @@ const AdminBlogEdit: React.FC = () => {
           </button>
         </div>
       </form>
+
+      <style>{`
+        .blog-preview-content h2 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-top: 1.25rem;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.35rem;
+          border-bottom: 3px solid #ea580c;
+        }
+
+        .blog-preview-content h3 {
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-top: 1rem;
+          margin-bottom: 0.35rem;
+          border-left: 4px solid #ea580c;
+          padding-left: 0.5rem;
+        }
+
+        .blog-preview-content h4 {
+          font-size: 1rem;
+          font-weight: 700;
+          margin-top: 0.85rem;
+          margin-bottom: 0.25rem;
+          color: #ea580c;
+        }
+
+        .blog-preview-content ul {
+          list-style: disc;
+          padding-left: 1.25rem;
+          margin-top: 0.35rem;
+        }
+
+        .blog-preview-content ol {
+          list-style: decimal;
+          padding-left: 1.25rem;
+          margin-top: 0.35rem;
+        }
+
+        .blog-preview-content li {
+          margin-bottom: 0.25rem;
+        }
+
+        .blog-preview-content p {
+          margin: 0.35rem 0;
+        }
+
+        .blog-preview-content blockquote {
+          border-left: 4px solid #fed7aa;
+          padding-left: 1rem;
+          color: #4b5563;
+          background: #fff7ed;
+          border-radius: 0.25rem;
+          padding-top: 0.75rem;
+          padding-bottom: 0.75rem;
+          margin: 1rem 0;
+        }
+
+        .blog-preview-content img {
+          border-radius: 12px;
+          width: 100%;
+          height: auto;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+          margin: 0.75rem 0;
+        }
+
+        .blog-preview-content .blog-inline-image {
+          margin: 1.25rem 0;
+          text-align: center;
+        }
+
+        .blog-preview-content .blog-inline-image img {
+          max-width: 100%;
+          display: inline-block;
+        }
+
+        .blog-preview-content .selected-image {
+          outline: 3px solid #ea580c;
+          outline-offset: 4px;
+          background: #fff7ed;
+        }
+
+        .blog-preview-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1rem 0;
+        }
+
+        .blog-preview-content th,
+        .blog-preview-content td {
+          border: 1px solid #e5e7eb;
+          padding: 0.75rem;
+        }
+
+        .blog-preview-content pre,
+        .blog-preview-content code {
+          background: #f5f5f5;
+          border-radius: 6px;
+          padding: 0.15rem 0.35rem;
+          font-size: 0.875rem;
+        }
+      `}</style>
     </div>
   );
 };

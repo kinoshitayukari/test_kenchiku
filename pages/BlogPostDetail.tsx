@@ -4,6 +4,12 @@ import { Clock, Check, ChevronRight, Twitter, Facebook, Linkedin, ArrowRight, Li
 import { blogService } from '../utils/blogService';
 import { BlogPost } from '../types';
 
+type TocItem = {
+  id: string;
+  text: string;
+  level: 'h2' | 'h3' | 'h4';
+};
+
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -11,6 +17,8 @@ const BlogPostDetail: React.FC = () => {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tocItems, setTocItems] = useState<TocItem[]>([]);
+  const [processedContent, setProcessedContent] = useState('');
 
   useEffect(() => {
     const loadPost = async () => {
@@ -43,6 +51,37 @@ const BlogPostDetail: React.FC = () => {
     loadPost();
   }, [id]);
 
+  useEffect(() => {
+    if (!post?.content) {
+      setTocItems([]);
+      setProcessedContent(post?.content || '');
+      return;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(post.content, 'text/html');
+    const headings = Array.from(doc.querySelectorAll('h2, h3, h4')) as HTMLHeadingElement[];
+    const idCounts: Record<string, number> = {};
+
+    const items = headings.map((heading, index) => {
+      const baseId = heading.id || heading.textContent?.trim().toLowerCase().replace(/[^a-z0-9\u3040-\u30ff\u4e00-\u9faf]+/gi, '-') || `section-${index}`;
+      const count = idCounts[baseId] || 0;
+      idCounts[baseId] = count + 1;
+      const uniqueId = count === 0 ? baseId : `${baseId}-${count}`;
+
+      heading.id = uniqueId;
+
+      return {
+        id: uniqueId,
+        text: heading.textContent?.trim() || `セクション ${index + 1}`,
+        level: heading.tagName.toLowerCase() as TocItem['level']
+      };
+    });
+
+    setTocItems(items);
+    setProcessedContent(doc.body.innerHTML);
+  }, [post]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] text-gray-500">
@@ -63,6 +102,7 @@ const BlogPostDetail: React.FC = () => {
   }
 
   return (
+    <>
     <div className="bg-[#fdfbf7] min-h-screen pb-20">
 
       {/* Breadcrumbs */}
@@ -109,6 +149,37 @@ const BlogPostDetail: React.FC = () => {
           <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
         </div>
 
+        {/* Table of Contents */}
+        {tocItems.length > 0 && (
+          <div className="mb-10">
+            <div className="bg-white border border-orange-100 rounded-3xl shadow-sm p-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-50/70 via-white to-orange-100/40 pointer-events-none"></div>
+              <div className="relative flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-brand-orange text-white flex items-center justify-center font-bold shadow-lg">目次</div>
+                <div>
+                  <p className="text-sm text-gray-500">この記事で扱うトピック</p>
+                  <h2 className="text-lg font-bold text-gray-900">Heading Highlights</h2>
+                </div>
+              </div>
+              <ol className="relative z-10 space-y-2">
+                {tocItems.map(item => (
+                  <li key={item.id} className="group">
+                    <a
+                      href={`#${item.id}`}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors duration-150 hover:bg-orange-50 ${
+                        item.level === 'h2' ? 'font-semibold text-gray-900' : 'text-gray-600'
+                      } ${item.level === 'h3' ? 'ml-3' : ''} ${item.level === 'h4' ? 'ml-6 text-sm' : ''}`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-brand-orange/80 group-hover:bg-brand-orange"></span>
+                      <span className="line-clamp-2">{item.text}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )}
+
         {/* Summary Box */}
         {post.summary && (
           <div className="bg-orange-50 border-l-4 border-brand-orange p-6 md:p-8 rounded-r-xl mb-12">
@@ -120,8 +191,8 @@ const BlogPostDetail: React.FC = () => {
 
         {/* Main Content */}
         <div
-          className="prose prose-lg max-w-none text-gray-700 mb-12"
-          dangerouslySetInnerHTML={{ __html: post.content || '' }}
+          className="blog-article-content text-gray-800 leading-8 mb-12"
+          dangerouslySetInnerHTML={{ __html: processedContent || post.content || '' }}
         >
         </div>
 
@@ -238,6 +309,107 @@ const BlogPostDetail: React.FC = () => {
       </div>
 
     </div>
+
+      <style>{`
+        .blog-article-content h2 {
+          font-size: 1.7rem;
+          font-weight: 800;
+          margin-top: 1.5rem;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.4rem;
+          border-bottom: 3px solid #ea580c;
+          scroll-margin-top: 90px;
+        }
+
+        .blog-article-content h3 {
+          font-size: 1.25rem;
+          font-weight: 800;
+          margin-top: 1.2rem;
+          margin-bottom: 0.35rem;
+          border-left: 6px solid #ea580c;
+          padding-left: 0.6rem;
+          scroll-margin-top: 90px;
+        }
+
+        .blog-article-content h4 {
+          font-size: 1.05rem;
+          font-weight: 700;
+          margin-top: 1rem;
+          margin-bottom: 0.25rem;
+          color: #ea580c;
+          scroll-margin-top: 90px;
+        }
+
+        .blog-article-content ul {
+          list-style: disc;
+          padding-left: 1.4rem;
+          margin: 0.5rem 0;
+        }
+
+        .blog-article-content ol {
+          list-style: decimal;
+          padding-left: 1.4rem;
+          margin: 0.5rem 0;
+        }
+
+        .blog-article-content li {
+          margin-bottom: 0.35rem;
+        }
+
+        .blog-article-content p {
+          margin: 0.55rem 0;
+        }
+
+        .blog-article-content blockquote {
+          border-left: 4px solid #fed7aa;
+          padding-left: 1rem;
+          color: #4b5563;
+          background: #fff7ed;
+          border-radius: 0.25rem;
+          padding-top: 0.75rem;
+          padding-bottom: 0.75rem;
+          margin: 1rem 0;
+        }
+
+        .blog-article-content img {
+          border-radius: 16px;
+          width: 100%;
+          height: auto;
+          box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+          margin: 1rem 0;
+        }
+
+        .blog-article-content .blog-inline-image {
+          margin: 1.25rem 0;
+          text-align: center;
+        }
+
+        .blog-article-content .blog-inline-image img {
+          max-width: 100%;
+          display: inline-block;
+        }
+
+        .blog-article-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1rem 0;
+        }
+
+        .blog-article-content th,
+        .blog-article-content td {
+          border: 1px solid #e5e7eb;
+          padding: 0.75rem;
+        }
+
+        .blog-article-content pre,
+        .blog-article-content code {
+          background: #f5f5f5;
+          border-radius: 6px;
+          padding: 0.2rem 0.5rem;
+          font-size: 0.95rem;
+        }
+      `}</style>
+    </>
   );
 };
 
