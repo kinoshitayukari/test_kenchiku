@@ -42,6 +42,7 @@ const AdminBlogEdit: React.FC = () => {
   const heroImageInputRef = useRef<HTMLInputElement>(null);
   const htmlTextareaRef = useRef<HTMLTextAreaElement>(null);
   const selectedImageRef = useRef<HTMLElement | null>(null);
+  const isTypingRef = useRef(false);
 
   useEffect(() => {
     try {
@@ -224,7 +225,7 @@ const AdminBlogEdit: React.FC = () => {
   };
 
   useEffect(() => {
-    if (editorMode === 'visual' && contentEditableRef.current) {
+    if (editorMode === 'visual' && contentEditableRef.current && !isTypingRef.current) {
       contentEditableRef.current.innerHTML = formData.content || '';
     }
   }, [editorMode, formData.content]);
@@ -494,9 +495,13 @@ const AdminBlogEdit: React.FC = () => {
                     contentEditable
                     className="blog-preview-content min-h-[320px] p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     onClick={handleSelectImage}
-                    onInput={(e) =>
-                      setFormData(prev => ({ ...prev, content: (e.target as HTMLDivElement).innerHTML }))
-                    }
+                    onInput={(e) => {
+                      isTypingRef.current = true;
+                      setFormData(prev => ({ ...prev, content: (e.target as HTMLDivElement).innerHTML }));
+                      requestAnimationFrame(() => {
+                        isTypingRef.current = false;
+                      });
+                    }}
                   />
                 ) : (
                   <textarea

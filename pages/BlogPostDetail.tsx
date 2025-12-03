@@ -144,6 +144,11 @@ const BlogPostDetail: React.FC = () => {
           </div>
         </div>
 
+        {/* Hero Image */}
+        <div className="rounded-3xl overflow-hidden shadow-lg mb-12 aspect-video">
+          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+        </div>
+
         {/* Table of Contents */}
         {tocItems.length > 0 && (
           <div className="mb-10">
@@ -174,11 +179,6 @@ const BlogPostDetail: React.FC = () => {
             </div>
           </div>
         )}
-
-        {/* Hero Image */}
-        <div className="rounded-3xl overflow-hidden shadow-lg mb-12 aspect-video">
-          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
-        </div>
 
         {/* Summary Box */}
         {post.summary && (
