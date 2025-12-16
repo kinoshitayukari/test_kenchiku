@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS, GOOGLE_FORM_URL } from '../constants';
+import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS, GOOGLE_FORM_URL, GOOGLE_FORM_EMBED_URL } from '../constants';
 import { Calculator, ShieldCheck, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -327,7 +327,7 @@ const Home: React.FC = () => {
             </div>
             <div className="aspect-[3/4] md:aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-lg border border-gray-100 bg-white">
               <iframe
-                src={GOOGLE_FORM_URL}
+                src={GOOGLE_FORM_EMBED_URL}
                 className="w-full h-full"
                 allowFullScreen
                 title="お問い合わせフォーム"

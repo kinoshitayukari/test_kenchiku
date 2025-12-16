@@ -2,8 +2,11 @@ import React from 'react';
 import { NavItem, PortfolioItem, PlanItem, BlogPost, FaqItem } from './types';
 import { Home, Bath, PaintBucket, Wrench, Calculator, ShieldCheck, MapPin } from 'lucide-react';
 
-export const GOOGLE_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSfQETOV-WxN_gYJNU9eWC2y9XTfHU8J-36_RfMmRrSlIn3FSA/viewform?usp=dialog';
+const GOOGLE_FORM_BASE =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfQETOV-WxN_gYJNU9eWC2y9XTfHU8J-36_RfMmRrSlIn3FSA/viewform';
+
+export const GOOGLE_FORM_URL = `${GOOGLE_FORM_BASE}?usp=dialog`;
+export const GOOGLE_FORM_EMBED_URL = `${GOOGLE_FORM_BASE}?embedded=true`;
 
 export const NAV_ITEMS: NavItem[] = [
   { label: '会社概要', href: '/#about' },
