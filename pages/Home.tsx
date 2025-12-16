@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS, GOOGLE_FORM_URL, GOOGLE_FORM_EMBED_URL } from '../constants';
-import { Calculator, ShieldCheck, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
+import { Calculator, ShieldCheck, Check, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
