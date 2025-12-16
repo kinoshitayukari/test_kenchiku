@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavItem, PortfolioItem, PlanItem, BlogPost, FaqItem } from './types';
 import { Home, Bath, PaintBucket, Wrench, Calculator, ShieldCheck, MapPin } from 'lucide-react';
+import { KITCHEN_PORTFOLIO_IMAGE_DATA_URI } from './utils/portfolioImages';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: '会社概要', href: '/#about' },
@@ -15,7 +16,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '1',
     title: 'キッチンリフォーム',
-    image: 'https://picsum.photos/seed/kitchen1/600/800',
+    image: KITCHEN_PORTFOLIO_IMAGE_DATA_URI,
     category: 'kitchen',
     description: '築25年の戸建て、工期2週間',
     details: {
