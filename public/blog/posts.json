@@ -1,0 +1,24 @@
+[
+  {
+    "id": "kitchen-reform-guide",
+    "title": "キッチンリフォームで後悔しないための実践ガイド",
+    "excerpt": "動線・収納・設備選びの3つを押さえて、毎日の家事が驚くほど楽になるキッチンリフォームのポイントをまとめました。",
+    "date": "2024-11-04",
+    "readTime": "7分",
+    "category": "キッチン",
+    "image": "/images/kitchen-reform-hero.jpg",
+    "tags": ["キッチン", "リフォーム", "収納", "動線"] ,
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "ワークトライアングルの設計から収納計画、設備選びまで、キッチンをストレスなく使うための具体的な進め方を解説します。",
+    "contentPath": "/posts/kitchen-reform-guide.html",
+    "checkpoints": [
+      "動線はワークトライアングルを2.7〜6mで設計する",
+      "背面収納の通路幅は90cm以上、ゴミ箱の置き場を最初に決める",
+      "お手入れ時間で設備と素材を選び、よく使う場所に予算を集中",
+      "既存配管を活かし、追加工事を避けて工期と費用を抑える"
+    ]
+  }
+]

@@ -17,7 +17,7 @@ const AdminBlogList: React.FC = () => {
       setError(null);
     } catch (err) {
       console.error(err);
-      setError('ブログ記事の取得に失敗しました。Supabaseの設定とポリシーをご確認ください。');
+      setError('ブログ記事の取得に失敗しました。GitHub上の投稿ファイルを確認してください。');
     } finally {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ const AdminBlogList: React.FC = () => {
         loadPosts();
       } catch (err) {
         console.error(err);
-        alert('削除に失敗しました。Supabaseの設定を確認してください。');
+      alert('GitHub管理のため、削除はGitHub上でファイルを更新してください。');
       }
     }
   };
@@ -43,10 +43,15 @@ const AdminBlogList: React.FC = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">ブログ記事一覧</h2>
-        <Link to="/admin/blog/new" className="bg-brand-orange text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors flex items-center gap-2">
-          <Plus size={18} />
-          新規作成
-        </Link>
+        <div className="flex items-center gap-3">
+          <div className="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg">
+            記事は GitHub の <code className="font-mono">public/blog</code> 配下で管理します。
+          </div>
+          <Link to="/admin/blog/new" className="bg-brand-orange text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors flex items-center gap-2">
+            <Plus size={18} />
+            新規作成
+          </Link>
+        </div>
       </div>
 
       {error && (

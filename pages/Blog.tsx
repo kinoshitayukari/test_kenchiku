@@ -20,7 +20,7 @@ const Blog: React.FC = () => {
         setError(null);
       } catch (err) {
         console.error(err);
-        setError('ブログ記事の読み込みに失敗しました。Supabaseの設定をご確認ください。');
+        setError('ブログ記事の読み込みに失敗しました。GitHub上の投稿ファイルが存在するか確認してください。');
       } finally {
         setLoading(false);
       }
