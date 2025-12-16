@@ -23,9 +23,33 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
 
 デプロイやビルドを挟まずに配信したい画像は、プロジェクト直下に `public/` ディレクトリを作成してアップロードします。GitHub の Web UI から直接追加する場合は、`public/` に移動して **Add file > Upload files** で画像をドラッグ＆ドロップしてください。`src`/`pages` からはルート相対パス（例: `/images/example.png`）で参照できます。`public/images/` では半角英数＋ハイフンで、サイズが分かるファイル名（例: `hero-kitchen-1920w.webp`）にすると管理しやすいです。
 
-## Supabase セットアップ
+## ブログ記事を GitHub からアップロードする運用に変更
 
-ブログ記事・お問い合わせデータは Supabase に保存します。以下の手順で設定してください。
+ブログは Supabase ではなく GitHub に置いたファイルを読み込む方式に変更しました。以下の手順で記事を追加できます。
+
+1. `public/blog/posts` に記事本文（HTML）ファイルを追加します。例: `public/blog/posts/kitchen-reform-guide.html`
+2. `public/blog/posts.json` にメタデータを追記します。
+   ```jsonc
+   {
+     "id": "my-new-post",
+     "title": "タイトル",
+     "excerpt": "一覧に表示する抜粋",
+     "date": "2024-11-04",
+     "readTime": "7分",
+     "category": "キッチン",
+     "image": "/blog/images/hero-my-new-post.webp", // もしくは外部URL
+     "tags": ["キッチン", "リフォーム"],
+     "author": { "name": "Tomoaki建築工房", "avatar": "/blog/images/avatar.png" },
+     "summary": "詳細ページ上部の要約",
+     "contentPath": "/posts/kitchen-reform-guide.html",
+     "checkpoints": ["ポイント1", "ポイント2"]
+   }
+   ```
+3. 記事や画像を GitHub に push すると、そのままサイトに反映されます。外部リポジトリの raw URL から配信したい場合は、環境変数 `VITE_GITHUB_BLOG_BASE_URL` にベース URL を設定してください（例: `https://raw.githubusercontent.com/your-org/your-repo/main/public/blog`）。
+
+## Supabase セットアップ（お問い合わせデータ用）
+
+お問い合わせデータは Supabase に保存します。以下の手順で設定してください。
 
 1. `.env.local` に Supabase の環境変数を追加します。
 
@@ -38,37 +62,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmYnp3ZWRqcWtrbWtkY25lYXBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2NTg1MTMsImV4cCI6MjA4MDIzNDUxM30.12v-vfCH51g16ymkzdx7EzfW5LDq4_0ltQOUsSE2J0Y
    ```
 
-2. Supabase の SQL Editor でブログテーブルを作成します。
-
-   ```sql
-   create table if not exists public.blog_posts (
-     id text primary key,
-     title text not null,
-     excerpt text not null,
-     date date not null,
-     read_time text,
-     category text not null,
-     image text,
-     tags text[],
-     author_name text,
-     author_avatar text,
-     summary text,
-     content text,
-     checkpoints text[],
-     created_at timestamp with time zone default now()
-   );
-
-   alter table public.blog_posts enable row level security;
-
-   create policy "Allow anon full access for admin UI" on public.blog_posts
-   for all
-   using (true)
-   with check (true);
-   ```
-
-   ※ セキュリティ要件に応じてポリシーを調整してください。Anonキーでの保存/削除が必要なため、上記では簡易的に全操作を許可しています。
-
-3. お問い合わせテーブルも SQL Editor から作成します（フォーム送信・管理画面で利用）。
+2. Supabase の SQL Editor でお問い合わせテーブルを作成します（フォーム送信・管理画面で利用）。
 
    ```sql
    create extension if not exists "pgcrypto";
@@ -93,19 +87,3 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    with check (true);
    ```
 
-4. 既定のリフォーム知識記事を Supabase に投入します（任意）。
-
-   ```bash
-   # 共有プロジェクトを使う場合はそのまま実行できます
-   # 自分の Supabase を使う場合は VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY を事前に設定
-   npm run seed:blogs
-   ```
-
-   スクリプトは以下の6記事を `blog_posts` にアップサートします：
-
-   - 失敗しないリフォーム計画の基本ステップ
-   - 耐久性アップのための住宅チェックポイント
-   - 断熱リフォームで快適さと光熱費を両立
-   - キッチン・浴室・洗面のリフォーム動線
-   - 耐震リフォームで守る家族の安全
-   - リフォーム費用を抑える見積りの読み解き方

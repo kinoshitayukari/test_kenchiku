@@ -47,7 +47,7 @@ const AdminBlogEdit: React.FC = () => {
           }
         } catch (err) {
           console.error(err);
-          setError('記事の取得に失敗しました。Supabaseの設定をご確認ください。');
+          setError('記事の取得に失敗しました。GitHub上の投稿ファイルをご確認ください。');
         } finally {
           setLoading(false);
         }
@@ -82,7 +82,7 @@ const AdminBlogEdit: React.FC = () => {
       navigate('/admin/blog');
     } catch (err) {
       console.error(err);
-      setError('ブログ記事の保存に失敗しました。Supabaseの設定やRLSポリシーを確認してください。');
+      setError('ブログ記事はGitHubにアップロードしたファイルで管理してください。');
     } finally {
       setSaving(false);
     }
@@ -91,6 +91,11 @@ const AdminBlogEdit: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">{isEdit ? 'ブログ記事編集' : '新規記事作成'}</h2>
+
+      <div className="bg-blue-50 border border-blue-100 text-blue-700 rounded-lg p-4 mb-4 text-sm">
+        ブログ記事は GitHub 上の <code className="font-mono">public/blog</code> フォルダにある JSON/HTML を編集・追加することで反映されます。
+        この画面は下書き用のメモとしてご利用ください。
+      </div>
 
       {error && (
         <div className="bg-red-50 text-red-700 border border-red-100 rounded-lg p-4 mb-4">{error}</div>

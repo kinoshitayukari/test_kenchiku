@@ -1,150 +1,91 @@
 import { BlogPost } from '../types';
 
-// Vercel で環境変数が未設定の場合も動作するよう、既定値に共有プロジェクトを設定
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL ?? 'https://jfbzwedjqkkmkdcneapf.supabase.co';
-const SUPABASE_ANON_KEY =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ??
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmYnp3ZWRqcWtrbWtkY25lYXBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2NTg1MTMsImV4cCI6MjA4MDIzNDUxM30.12v-vfCH51g16ymkzdx7EzfW5LDq4_0ltQOUsSE2J0Y';
-const BLOG_TABLE = 'blog_posts';
-
-interface SupabaseBlogRow {
+interface GitHubBlogManifestItem {
   id: string;
   title: string;
   excerpt: string;
   date: string;
-  read_time?: string | null;
+  readTime?: string;
   category: string;
-  image?: string | null;
-  tags?: string[] | null;
-  author_name?: string | null;
-  author_avatar?: string | null;
-  summary?: string | null;
-  content?: string | null;
-  checkpoints?: string[] | null;
+  image: string;
+  tags?: string[];
+  author?: { name: string; avatar: string };
+  summary?: string;
+  contentPath?: string;
+  checkpoints?: string[];
 }
 
-const requireConfig = () => {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error('SupabaseのURLとAnon Keyを環境変数に設定してください。');
-  }
+const BLOG_BASE_PATH = import.meta.env.VITE_GITHUB_BLOG_BASE_URL?.replace(/\/$/, '') || '/blog';
+
+const resolvePath = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const normalizedBase = BLOG_BASE_PATH.startsWith('/') ? BLOG_BASE_PATH : `/${BLOG_BASE_PATH}`;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${normalizedBase}${normalizedPath}`;
 };
 
-const getHeaders = () => ({
-  apikey: SUPABASE_ANON_KEY!,
-  Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-  'Content-Type': 'application/json'
-});
+const fetchManifest = async (): Promise<GitHubBlogManifestItem[]> => {
+  const response = await fetch(resolvePath('/posts.json'), { cache: 'no-cache' });
 
-const mapRowToBlogPost = (row: SupabaseBlogRow): BlogPost => ({
-  id: row.id,
-  title: row.title,
-  excerpt: row.excerpt ?? '',
-  date: row.date,
-  readTime: row.read_time ?? '5分',
-  category: row.category,
-  image: row.image ?? '',
-  tags: row.tags ?? [],
-  author: row.author_name ? { name: row.author_name, avatar: row.author_avatar ?? '' } : undefined,
-  summary: row.summary ?? '',
-  content: row.content ?? '',
-  checkpoints: row.checkpoints ?? []
+  if (!response.ok) {
+    throw new Error('GitHubからブログ一覧を取得できませんでした。');
+  }
+
+  return (await response.json()) as GitHubBlogManifestItem[];
+};
+
+const mapToBlogPost = (item: GitHubBlogManifestItem, content?: string): BlogPost => ({
+  id: item.id,
+  title: item.title,
+  excerpt: item.excerpt,
+  date: item.date,
+  readTime: item.readTime ?? '5分',
+  category: item.category,
+  image: item.image,
+  tags: item.tags ?? [],
+  author: item.author,
+  summary: item.summary,
+  content,
+  checkpoints: item.checkpoints ?? []
 });
 
 export const blogService = {
   fetchPosts: async (): Promise<BlogPost[]> => {
-    requireConfig();
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/${BLOG_TABLE}?select=*&order=date.desc`,
-      { headers: getHeaders() }
-    );
-
-    if (!response.ok) {
-      throw new Error('ブログ記事の取得に失敗しました');
-    }
-
-    const data = await response.json();
-    return (data as SupabaseBlogRow[]).map(mapRowToBlogPost);
+    const manifest = await fetchManifest();
+    return manifest.map((item) => mapToBlogPost(item));
   },
 
   fetchPostById: async (id: string): Promise<BlogPost | null> => {
-    requireConfig();
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/${BLOG_TABLE}?id=eq.${id}&select=*`,
-      { headers: getHeaders() }
-    );
+    const manifest = await fetchManifest();
+    const item = manifest.find((entry) => entry.id === id);
+    if (!item) return null;
 
-    if (!response.ok) {
-      throw new Error('ブログ記事の取得に失敗しました');
+    let content: string | undefined;
+    if (item.contentPath) {
+      const response = await fetch(resolvePath(item.contentPath));
+      if (!response.ok) {
+        throw new Error('記事本文の取得に失敗しました。GitHub上のファイルを確認してください。');
+      }
+      content = await response.text();
     }
 
-    const data = (await response.json()) as SupabaseBlogRow[];
-    return data[0] ? mapRowToBlogPost(data[0]) : null;
+    return mapToBlogPost(item, content);
   },
 
   fetchRelatedPosts: async (category: string, excludeId: string, limit = 3): Promise<BlogPost[]> => {
-    requireConfig();
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/${BLOG_TABLE}?category=eq.${encodeURIComponent(category)}&id=neq.${encodeURIComponent(
-        excludeId
-      )}&order=date.desc&limit=${limit}&select=*`,
-      { headers: getHeaders() }
-    );
-
-    if (!response.ok) {
-      throw new Error('関連記事の取得に失敗しました');
-    }
-
-    const data = (await response.json()) as SupabaseBlogRow[];
-    return data.map(mapRowToBlogPost);
+    const manifest = await fetchManifest();
+    return manifest
+      .filter((item) => item.category === category && item.id !== excludeId)
+      .slice(0, limit)
+      .map((item) => mapToBlogPost(item));
   },
 
-  savePost: async (post: BlogPost): Promise<void> => {
-    requireConfig();
-    const payload: SupabaseBlogRow = {
-      id: post.id,
-      title: post.title,
-      excerpt: post.excerpt,
-      date: post.date,
-      read_time: post.readTime,
-      category: post.category,
-      image: post.image,
-      tags: post.tags,
-      author_name: post.author?.name ?? null,
-      author_avatar: post.author?.avatar ?? null,
-      summary: post.summary ?? null,
-      content: post.content ?? null,
-      checkpoints: post.checkpoints ?? []
-    };
-
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${BLOG_TABLE}`, {
-      method: 'POST',
-      headers: {
-        ...getHeaders(),
-        Prefer: 'resolution=merge-duplicates,return=representation'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      throw new Error('ブログ記事の保存に失敗しました');
-    }
+  savePost: async () => {
+    throw new Error('ブログ記事はGitHubにアップロードしたファイルで管理してください。');
   },
 
-  deletePost: async (id: string): Promise<void> => {
-    requireConfig();
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/${BLOG_TABLE}?id=eq.${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          ...getHeaders(),
-          Prefer: 'return=representation'
-        }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('ブログ記事の削除に失敗しました');
-    }
+  deletePost: async () => {
+    throw new Error('ブログ記事の削除はGitHub上のファイル操作で行ってください。');
   }
 };

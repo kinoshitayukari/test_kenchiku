@@ -34,7 +34,7 @@ const BlogPostDetail: React.FC = () => {
         setRelatedPosts(related);
       } catch (err) {
         console.error(err);
-        setError('記事の読み込みに失敗しました。Supabaseの設定を確認してください。');
+        setError('記事の読み込みに失敗しました。GitHub上の投稿ファイルを確認してください。');
       } finally {
         setLoading(false);
       }
