@@ -15,7 +15,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '1',
     title: 'キッチンリフォーム',
-    image: 'https://picsum.photos/seed/kitchen1/600/800',
+    image: '/images/portfolio/kitchen.svg',
     category: 'kitchen',
     description: '築25年の戸建て、工期2週間',
     details: {
@@ -27,7 +27,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '2',
     title: '浴室リフォーム',
-    image: 'https://picsum.photos/seed/bath1/600/800',
+    image: '/images/portfolio/bathroom.svg',
     category: 'bath',
     description: 'マンション、工期10日',
     details: {
@@ -39,7 +39,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '3',
     title: 'リビングリフォーム',
-    image: 'https://picsum.photos/seed/living1/600/800',
+    image: '/images/portfolio/living.svg',
     category: 'living',
     description: '戸建て全面改装、工期3週間',
     details: {
@@ -51,7 +51,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '4',
     title: '外壁塗装',
-    image: 'https://picsum.photos/seed/exterior1/600/800',
+    image: '/images/portfolio/exterior.svg',
     category: 'exterior',
     description: '戸建て、工期1週間',
     details: {
@@ -63,7 +63,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '5',
     title: 'トイレリフォーム',
-    image: 'https://picsum.photos/seed/toilet1/600/800',
+    image: '/images/portfolio/toilet.svg',
     category: 'toilet',
     description: 'マンション、工期5日',
     details: {
@@ -75,7 +75,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: '6',
     title: '和室リフォーム',
-    image: 'https://picsum.photos/seed/japanese1/600/800',
+    image: '/images/portfolio/japanese.svg',
     category: 'japanese',
     description: '戸建て、工期2週間',
     details: {

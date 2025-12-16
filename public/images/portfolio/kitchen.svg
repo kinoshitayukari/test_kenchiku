@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <defs>
+    <linearGradient id="grad" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f5f1ea"/>
+      <stop offset="100%" stop-color="#e9dfd0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#grad)"/>
+  <rect x="120" y="220" width="1360" height="760" rx="40" fill="#fff" stroke="#d3c7b6" stroke-width="10"/>
+  <rect x="120" y="540" width="1360" height="100" fill="#f5d8b8" opacity="0.8"/>
+  <rect x="200" y="640" width="400" height="140" rx="18" fill="#d38b4a" opacity="0.8"/>
+  <rect x="660" y="640" width="400" height="140" rx="18" fill="#c7b293" opacity="0.7"/>
+  <rect x="1120" y="640" width="240" height="200" rx="18" fill="#c6d7c1" opacity="0.8"/>
+  <text x="800" y="420" font-family="'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="90" text-anchor="middle" fill="#2f2a25">キッチンリフォーム</text>
+  <text x="800" y="520" font-family="'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="36" text-anchor="middle" fill="#7a6a58">木目と白を基調にした温かみのある施工イメージ</text>
+</svg>
