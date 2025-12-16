@@ -52,5 +52,140 @@
       "ゴミ箱と収納動線を図面段階で固定し、無駄な買い替えを防止",
       "管理規約・搬入経路を確認し、着工前に必要書類を準備"
     ]
+  },
+  {
+    "id": "kitchen-reform-cautions",
+    "title": "キッチンリフォームの注意点チェックリスト",
+    "excerpt": "動線・換気・収納の3軸で失敗を防ぐキッチンリフォームの注意点をまとめました。",
+    "date": "2025-02-15",
+    "readTime": "9分",
+    "category": "キッチン",
+    "image": "/images/kitchen-reform-cautions.jpg",
+    "tags": [
+      "キッチン",
+      "換気",
+      "収納",
+      "チェックリスト"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "スムーズな家事動線と匂い・油煙対策、収納計画を同時に叶えるための具体的な確認ポイントを解説します。",
+    "contentPath": "/posts/kitchen-reform-cautions.html",
+    "checkpoints": [
+      "レンジフードの排気経路と給気口の位置を図面で確認",
+      "冷蔵庫・シンク・コンロの三角距離を2.7m〜6mに収める",
+      "ゴミ箱と調味料の定位置を決め、背面収納の通路幅は90cm以上",
+      "食洗機・IH・オーブンの専用回路を確保し、分電盤容量を確認"
+    ]
+  },
+  {
+    "id": "livingroom-reform-cautions",
+    "title": "リビングリフォームで失敗しないための注意点",
+    "excerpt": "照明計画・コンセント配置・断熱の3本柱で快適さを底上げするリビングリフォームのチェックポイント。",
+    "date": "2025-02-16",
+    "readTime": "8分",
+    "category": "リビング",
+    "image": "/images/livingroom-reform-cautions.jpg",
+    "tags": [
+      "リビング",
+      "照明",
+      "断熱",
+      "間取り"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "昼と夜の居心地を左右する照明レイヤー、暮らし方に合わせたコンセント計画、窓まわりの断熱強化のコツを詳しく紹介します。",
+    "contentPath": "/posts/livingroom-reform-cautions.html",
+    "checkpoints": [
+      "作業・くつろぎ・演出の3種類の光を組み合わせる",
+      "テレビ裏・ソファ横・掃除機用など用途別にコンセントを配置",
+      "窓の気密をチェックし、内窓やLow-Eガラスを検討",
+      "床材と下地の遮音・断熱性能を確認し、段差解消を計画"
+    ]
+  },
+  {
+    "id": "exterior-reform-cautions",
+    "title": "外装リフォームの注意点と優先順位",
+    "excerpt": "塗装・防水・補修の順番と足場費用の使い方を整理した外装リフォームの実践ガイド。",
+    "date": "2025-02-17",
+    "readTime": "10分",
+    "category": "外壁",
+    "image": "/images/exterior-reform-cautions.jpg",
+    "tags": [
+      "外壁",
+      "屋根",
+      "防水",
+      "メンテナンス"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "足場を組むタイミングでまとめて行いたい塗装・シーリング・防水のポイントと、耐久性を左右する素材の選び方を解説します。",
+    "contentPath": "/posts/exterior-reform-cautions.html",
+    "checkpoints": [
+      "足場を組む工事（外壁・屋根・雨樋）は同時施工でコスト圧縮",
+      "既存シーリングの劣化度合いを確認し、打ち替え範囲を確定",
+      "塗料は耐候年数と保証年数をセットで比較",
+      "バルコニー防水は下地勾配と排水経路を必ずチェック"
+    ]
+  },
+  {
+    "id": "toilet-reform-cautions",
+    "title": "トイレリフォームの注意点と快適計画",
+    "excerpt": "交換だけで終わらせないための換気・収納・手洗い計画を網羅したトイレリフォームの注意点。",
+    "date": "2025-02-18",
+    "readTime": "7分",
+    "category": "トイレ",
+    "image": "/images/toilet-reform-cautions.jpg",
+    "tags": [
+      "トイレ",
+      "換気",
+      "収納",
+      "バリアフリー"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "掃除のしやすさと将来のバリアフリーを見据えた便器選び、換気・手洗い・収納の配置を具体的にチェックします。",
+    "contentPath": "/posts/toilet-reform-cautions.html",
+    "checkpoints": [
+      "排水芯と給水位置を確認し、床・壁の開口が最小で済む機種を選定",
+      "換気扇の風量とダクト経路を見直し、24時間換気に対応",
+      "手洗い器はカウンター高さと跳ね返り対策をセットで検討",
+      "将来の手すり位置と下地補強を同時に施工"
+    ]
+  },
+  {
+    "id": "waterline-reform-cautions",
+    "title": "水道・配管リフォームで確認したい注意点",
+    "excerpt": "漏水防止・凍結対策・水圧確保の3視点で水道リフォームのリスクを減らすためのポイントを整理しました。",
+    "date": "2025-02-19",
+    "readTime": "8分",
+    "category": "水回り",
+    "image": "/images/waterline-reform-cautions.jpg",
+    "tags": [
+      "水道",
+      "配管",
+      "凍結対策",
+      "漏水"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "配管材質の選択、既存ルートの再利用、止水計画や凍結対策など、見えない部分で後悔しないための注意点を詳しく解説します。",
+    "contentPath": "/posts/waterline-reform-cautions.html",
+    "checkpoints": [
+      "既存配管の材質と劣化度を調査し、更生か更新かを判断",
+      "分岐位置と止水箇所を整理し、メンテナンス性を高める",
+      "寒冷地は断熱材の厚みとヒーター設置の有無を決定",
+      "水圧が不足する場合は給湯器・ポンプ容量もセットで見直す"
+    ]
   }
 ]

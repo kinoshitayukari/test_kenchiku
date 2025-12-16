@@ -17,6 +17,15 @@
 - ロゴ: `logo-primary-640w.png`（透過が必要な場合のみ png）
 - アイコン/ピクト: `icon-phone-64w.webp`, `icon-mail-64w.webp`
 
+## 新規ブログ記事用の画像メモ（GitHub アップロード用）
+| 参照パス | 想定シーン | 記事 ID |
+| --- | --- | --- |
+| `/images/kitchen-reform-cautions.jpg` | キッチン動線と換気を示す俯瞰イメージ | `kitchen-reform-cautions` |
+| `/images/livingroom-reform-cautions.jpg` | 間接照明を効かせたリビング全景 | `livingroom-reform-cautions` |
+| `/images/exterior-reform-cautions.jpg` | 足場が組まれた外壁・屋根工事の様子 | `exterior-reform-cautions` |
+| `/images/toilet-reform-cautions.jpg` | トイレの配管位置や手洗い器を確認する様子 | `toilet-reform-cautions` |
+| `/images/waterline-reform-cautions.jpg` | 建物配管ルートや点検口を示す図面・現場写真 | `waterline-reform-cautions` |
+
 ## 配置例
 ```
 public/
