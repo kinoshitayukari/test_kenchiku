@@ -1,41 +1,18 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS } from '../constants';
-import { Calculator, ShieldCheck, Check, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
+import { Calculator, ShieldCheck, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { inquiryService } from '../utils/inquiryService';
+
+const GOOGLE_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfQETOV-WxN_gYJNU9eWC2y9XTfHU8J-36_RfMmRrSlIn3FSA/viewform?usp=dialog';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormStatus('submitting');
-    
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      type: formData.get('type') as string,
-      budget: formData.get('budget') as string,
-      message: formData.get('message') as string,
-    };
-
-    try {
-      await inquiryService.saveInquiry(data);
-      setFormStatus('success');
-      (e.target as HTMLFormElement).reset();
-    } catch (error) {
-      console.error(error);
-      setFormStatus('error');
-    }
   };
 
   const featureShots = [
@@ -335,114 +312,42 @@ const Home: React.FC = () => {
             <p className="text-gray-600 text-sm">まずはお気軽にご相談ください。神戸三田エリアなら即日対応可能です</p>
           </div>
 
-          {formStatus === 'success' ? (
-            <div className="bg-green-50 border border-green-200 text-green-800 rounded-xl p-8 text-center">
-              <Check size={48} className="mx-auto mb-4 text-green-600" />
-              <h3 className="text-xl font-bold mb-2">送信完了しました</h3>
-              <p>お問い合わせありがとうございます。<br />担当者より24時間以内にご連絡させていただきます。</p>
-              <button
-                onClick={() => setFormStatus('idle')}
-                className="mt-6 text-sm font-bold underline"
-              >
-                他のお問い合わせを送る
-              </button>
+          <div className="space-y-6">
+            <div className="bg-[#fdfbf7] border border-orange-100 rounded-xl p-6 text-sm text-gray-700">
+              <p className="mb-2">以下のフォームにご入力ください。送信後は担当者より24時間以内にご連絡いたします。</p>
+              <p>
+                もしフォームが表示されない場合は、
+                <a
+                  href={GOOGLE_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-brand-orange underline"
+                >
+                  こちらのページ
+                </a>
+                から直接アクセスできます。
+              </p>
             </div>
-          ) : (
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {formStatus === 'error' && (
-                <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
-                  送信に失敗しました。通信環境をご確認の上、再度お試しください。
-                </div>
-              )}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  お名前 <span className="text-red-500">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  name="name"
-                  placeholder="山田太郎" 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-colors"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  メールアドレス <span className="text-red-500">*</span>
-                </label>
-                <input 
-                  type="email" 
-                  name="email"
-                  placeholder="example@email.com" 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-colors"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  電話番号
-                </label>
-                <input 
-                  type="tel" 
-                  name="phone"
-                  placeholder="090-1234-5678" 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  リフォーム箇所
-                </label>
-                <select name="type" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-colors bg-white">
-                  <option value="">選択してください</option>
-                  <option value="kitchen">キッチン</option>
-                  <option value="bath">浴室</option>
-                  <option value="toilet">トイレ</option>
-                  <option value="exterior">外壁</option>
-                  <option value="whole">全面改装</option>
-                  <option value="other">その他</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ご予算
-                </label>
-                <select name="budget" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-colors bg-white">
-                  <option value="">選択してください</option>
-                  <option value="under50">50万円未満</option>
-                  <option value="under100">50〜100万円</option>
-                  <option value="under300">100〜300万円</option>
-                  <option value="over300">300万円以上</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ご相談内容
-                </label>
-                <textarea 
-                  name="message"
-                  rows={4}
-                  placeholder="リフォームのご要望や気になる点をお聞かせください（500文字以内）" 
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange outline-none transition-colors resize-none"
-                ></textarea>
-                <p className="text-right text-xs text-gray-400 mt-1">0/500文字</p>
-              </div>
-
-              <button 
-                type="submit" 
-                disabled={formStatus === 'submitting'}
-                className="w-full bg-black text-white font-bold py-4 rounded-full hover:bg-gray-800 transition-colors shadow-lg disabled:bg-gray-400"
+            <div className="aspect-[3/4] md:aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-lg border border-gray-100 bg-white">
+              <iframe
+                src={GOOGLE_FORM_URL}
+                className="w-full h-full"
+                allowFullScreen
+                title="お問い合わせフォーム"
+              ></iframe>
+            </div>
+            <div className="text-center">
+              <a
+                href={GOOGLE_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-black text-white font-bold hover:bg-gray-800 transition-colors shadow-md"
               >
-                {formStatus === 'submitting' ? '送信中...' : '無料見積もりを依頼する'}
-              </button>
-              <p className="text-center text-xs text-gray-500 mt-4">通常24時間以内にご返信いたします</p>
-            </form>
-          )}
+                フォームを別タブで開く
+                <ArrowRight size={16} />
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </div>
