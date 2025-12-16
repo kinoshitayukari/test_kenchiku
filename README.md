@@ -85,5 +85,11 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    for all
    using (true)
    with check (true);
-   ```
+  ```
+
+## 画像パス対応表（後でアップロードする際のメモ）
+
+- `/images/kitchen-cost-hero.jpg`：費用ガイド記事のヒーローイメージ（完成イメージ）
+- `/images/kitchen-cost-plan.jpg`：配管位置とレイアウト解説用の図解イメージ
+- `/images/kitchen-cost-checklist.jpg`：チェックリストを示すイラストイメージ
 
