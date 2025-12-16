@@ -6,11 +6,11 @@
     "date": "2024-11-04",
     "readTime": "7分",
     "category": "キッチン",
-    "image": "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80",
+    "image": "/images/kitchen-reform-hero.jpg",
     "tags": ["キッチン", "リフォーム", "収納", "動線"] ,
     "author": {
       "name": "Tomoaki建築工房",
-      "avatar": "https://avatars.githubusercontent.com/u/583231?v=4"
+      "avatar": "/images/tomoaki-author.jpg"
     },
     "summary": "ワークトライアングルの設計から収納計画、設備選びまで、キッチンをストレスなく使うための具体的な進め方を解説します。",
     "contentPath": "/posts/kitchen-reform-guide.html",

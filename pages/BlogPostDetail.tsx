@@ -120,25 +120,30 @@ const BlogPostDetail: React.FC = () => {
 
         {/* Main Content */}
         <div
-          className="prose prose-lg max-w-none text-gray-700 mb-12"
+          className="article-content prose prose-lg max-w-none text-gray-700 leading-relaxed mb-12 space-y-12"
           dangerouslySetInnerHTML={{ __html: post.content || '' }}
         >
         </div>
 
         {/* Checkpoints Box */}
         {post.checkpoints && post.checkpoints.length > 0 && (
-          <div className="bg-white rounded-2xl p-8 mb-16 shadow-sm border border-orange-100">
-            <div className="flex items-center gap-2 mb-6 text-brand-orange">
-              <Lightbulb className="fill-current" size={24} />
-              <h3 className="text-xl font-bold">リフォームのポイント</h3>
+          <div className="bg-gradient-to-br from-orange-50 via-white to-white rounded-3xl p-8 mb-16 shadow-md border border-orange-100">
+            <div className="flex items-center gap-3 mb-6 text-brand-orange">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-inner border border-orange-100 flex items-center justify-center">
+                <Lightbulb className="fill-current" size={22} />
+              </div>
+              <div>
+                <p className="text-xs font-bold tracking-[0.2em] uppercase">Checklist</p>
+                <h3 className="text-2xl font-serif font-bold text-gray-900">リフォームのポイント</h3>
+              </div>
             </div>
-            <ul className="space-y-4">
+            <ul className="grid gap-4 md:grid-cols-2">
               {post.checkpoints.map((point, idx) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <div className="mt-1 bg-green-100 text-green-600 rounded-full p-1 shrink-0">
-                    <Check size={14} strokeWidth={3} />
+                <li key={idx} className="flex items-start gap-3 bg-white/70 border border-orange-100 rounded-2xl p-4 shadow-sm">
+                  <div className="mt-1 bg-green-100 text-green-600 rounded-full p-1.5 shrink-0">
+                    <Check size={16} strokeWidth={3} />
                   </div>
-                  <span className="text-gray-700 font-medium">{point}</span>
+                  <span className="text-gray-800 font-semibold leading-relaxed">{point}</span>
                 </li>
               ))}
             </ul>
