@@ -4,6 +4,7 @@ import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS } from '../constants';
 import { Calculator, ShieldCheck, Check, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../utils/storage';
+import { HERO_IMAGE_DATA_URI } from '../utils/heroImage';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -79,9 +80,9 @@ const Home: React.FC = () => {
              <div className="absolute top-0 right-0 w-full h-full bg-orange-100 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] opacity-50 blur-3xl -z-10"></div>
              
              {/* Hero Image */}
-             <img 
-               src="https://picsum.photos/seed/interior/800/1000" 
-               alt="Modern Kitchen Renovation" 
+             <img
+               src={HERO_IMAGE_DATA_URI}
+               alt="木目が美しい開放的なキッチンとダイニング"
                className="w-full h-full object-cover rounded-3xl shadow-2xl"
              />
              
