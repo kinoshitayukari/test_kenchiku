@@ -47,6 +47,24 @@ View your app in AI Studio: https://ai.studio/apps/drive/17zAvXDMgmL6VrKjYpfFRgy
    ```
 3. 記事や画像を GitHub に push すると、そのままサイトに反映されます。外部リポジトリの raw URL から配信したい場合は、環境変数 `VITE_GITHUB_BLOG_BASE_URL` にベース URL を設定してください（例: `https://raw.githubusercontent.com/your-org/your-repo/main/public/blog`）。
 
+## 「キッチンリフォーム」記事の画像リンク（レジュメ）と GitHub 操作手順
+
+以下は `public/blog/posts/kitchen-reform-guide.html` で使われている画像リンクのまとめです。画像パスを差し替える場合は、同じファイル名で上書きするか、`posts.json` の `image`/`contentPath` を変更してください。
+
+| 用途 | 画像パス | alt テキスト |
+| --- | --- | --- |
+| ワークトライアングル解説 | `/images/kitchen-work-triangle.jpg` | ワークトライアングルを意識した明るいキッチン |
+| 収納計画の例 | `/images/kitchen-storage.jpg` | 引き出し収納が充実したキッチン |
+| 設備・素材の例 | `/images/kitchen-equipment.jpg` | 掃除のしやすいIHとフラットな天板 |
+| 配置計画の図面 | `/images/kitchen-planning.jpg` | 工事前に配置を確認する設計図面 |
+
+### GitHub で画像やリンクを更新する手順（Web UI）
+
+1. GitHub リポジトリの `public/images/` に移動し、右上の **Add file > Upload files** をクリック。
+2. 差し替えたい画像をドラッグ＆ドロップしてアップロードし、コミットします（同名ファイルなら自動で上書き）。
+3. `public/blog/posts/kitchen-reform-guide.html` を開き、**Edit this file** で `<img src="...">` を必要なパスに変更し、コミットします。
+4. サイトは自動でビルド・デプロイされるため、数分後に新しい画像リンクが反映されます。
+
 ## Supabase セットアップ（お問い合わせデータ用）
 
 お問い合わせデータは Supabase に保存します。以下の手順で設定してください。
