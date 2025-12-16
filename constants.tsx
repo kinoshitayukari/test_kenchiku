@@ -2,6 +2,9 @@ import React from 'react';
 import { NavItem, PortfolioItem, PlanItem, BlogPost, FaqItem } from './types';
 import { Home, Bath, PaintBucket, Wrench, Calculator, ShieldCheck, MapPin } from 'lucide-react';
 
+export const GOOGLE_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfQETOV-WxN_gYJNU9eWC2y9XTfHU8J-36_RfMmRrSlIn3FSA/viewform?usp=dialog';
+
 export const NAV_ITEMS: NavItem[] = [
   { label: '会社概要', href: '/#about' },
   { label: '施工実績', href: '/#portfolio' },

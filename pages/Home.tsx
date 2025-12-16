@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS } from '../constants';
+import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS, GOOGLE_FORM_URL } from '../constants';
 import { Calculator, ShieldCheck, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const GOOGLE_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSfQETOV-WxN_gYJNU9eWC2y9XTfHU8J-36_RfMmRrSlIn3FSA/viewform?usp=dialog';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
