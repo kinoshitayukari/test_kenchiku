@@ -187,5 +187,194 @@
       "寒冷地は断熱材の厚みとヒーター設置の有無を決定",
       "水圧が不足する場合は給湯器・ポンプ容量もセットで見直す"
     ]
+  },
+  {
+    "id": "kitchen-remodel-tips",
+    "title": "キッチンリフォームで失敗しないための完全ガイド｜プロが教える注意点と後悔を防ぐ5つの鉄則",
+    "excerpt": "収納・動線・設備選びなど、キッチンリフォームで失敗しないための注意点を総まとめ。",
+    "date": "2025-02-20",
+    "readTime": "12分",
+    "category": "キッチン",
+    "image": "/images/kitchen_remodel_tips_0.jpg",
+    "tags": [
+      "キッチン",
+      "リフォーム",
+      "注意点",
+      "動線"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "収納計画やワークトライアングルの考え方、設備選びの注意点を押さえながら、後悔しないキッチンリフォームの進め方を解説します。",
+    "contentPath": "/posts/kitchen_remodel_tips.html"
+  },
+  {
+    "id": "kitchen-renovation-cost",
+    "title": "キッチンリフォームの費用相場を徹底解説！コストを抑えるコツと予算別事例ガイド",
+    "excerpt": "キッチンリフォームの費用相場と予算別事例、コストを抑える具体策を解説。",
+    "date": "2025-02-21",
+    "readTime": "10分",
+    "category": "キッチン",
+    "image": "/images/kitchen_renovation_cost_0.jpg",
+    "tags": [
+      "キッチン",
+      "費用",
+      "リフォーム",
+      "見積もり"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "工事内容別の相場や予算帯ごとの事例を整理し、見積もりで注意すべき点とコストダウンのコツをまとめました。",
+    "contentPath": "/posts/kitchen_renovation_cost.html"
+  },
+  {
+    "id": "living-renovation-considerations",
+    "title": "理想のリビングを実現！リフォームで失敗しないための注意点・費用相場・事例を徹底解説",
+    "excerpt": "リビングリフォームの注意点・費用相場・事例をまとめた完全ガイド。",
+    "date": "2025-02-22",
+    "readTime": "11分",
+    "category": "リビング",
+    "image": "/images/living_renovation_considerations_0.jpg",
+    "tags": [
+      "リビング",
+      "リフォーム",
+      "注意点",
+      "断熱"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "間取り変更や断熱強化などの要点を押さえながら、リビングリフォームで失敗しないためのチェックポイントを詳しく紹介します。",
+    "contentPath": "/posts/living_renovation_considerations.html"
+  },
+  {
+    "id": "living-renovation-cost",
+    "title": "リビングリフォームの費用相場を完全解説！予算別の事例と安く抑えるコツ",
+    "excerpt": "リビングリフォームの費用相場と予算別の施工事例、節約のコツを解説。",
+    "date": "2025-02-23",
+    "readTime": "10分",
+    "category": "リビング",
+    "image": "/images/living_renovation_cost_0.jpg",
+    "tags": [
+      "リビング",
+      "費用",
+      "リフォーム",
+      "事例"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "リビング改修の相場感と価格が変動する要因を整理し、無理なく進めるための予算配分とコスト削減のポイントを紹介します。",
+    "contentPath": "/posts/living_renovation_cost.html"
+  },
+  {
+    "id": "outside-reform-cost",
+    "title": "外装リフォームの費用相場はいくら？塗装・カバー工法・張り替えの比較と失敗しない節約術",
+    "excerpt": "外装リフォームの費用相場と工法別の違い、節約術をまとめました。",
+    "date": "2025-02-24",
+    "readTime": "10分",
+    "category": "外壁",
+    "image": "/images/outside_reform_cost_0.jpg",
+    "tags": [
+      "外壁",
+      "屋根",
+      "費用",
+      "リフォーム"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "塗装・カバー工法・張り替えの違いを比較しながら、外装リフォームの費用感と賢いコスト管理のポイントを解説します。",
+    "contentPath": "/posts/outside_reform_cost.html"
+  },
+  {
+    "id": "outside-reform-attention",
+    "title": "【保存版】外装リフォームで失敗しないための注意点完全ガイド｜初心者でも安心の基礎知識から業者選びまで",
+    "excerpt": "外装リフォームで後悔しないための注意点とチェック項目を整理。",
+    "date": "2025-02-25",
+    "readTime": "9分",
+    "category": "外壁",
+    "image": "/images/outside_reform_attention_0.jpg",
+    "tags": [
+      "外壁",
+      "屋根",
+      "注意点",
+      "メンテナンス"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "劣化診断の見極めや工事範囲の決め方など、外装リフォームで失敗を避けるための確認ポイントをまとめました。",
+    "contentPath": "/posts/outside_reform_attention.html"
+  },
+  {
+    "id": "reform-attention",
+    "title": "【プロが教える】リフォームで失敗しないための全注意点：事例から学ぶ成功のポイント",
+    "excerpt": "リフォーム全般で失敗しないための注意点と成功のポイントを解説。",
+    "date": "2025-02-26",
+    "readTime": "12分",
+    "category": "リフォーム",
+    "image": "/images/reform_attention_0.jpg",
+    "tags": [
+      "リフォーム",
+      "注意点",
+      "見積もり",
+      "トラブル防止"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "計画から契約、工事中の立ち回りまで、リフォームで後悔しないための重要チェック項目を網羅します。",
+    "contentPath": "/posts/reform_attention.html"
+  },
+  {
+    "id": "toilet-remodel-tips",
+    "title": "トイレリフォームで後悔しない！失敗を防ぐ注意点と成功のポイント完全ガイド",
+    "excerpt": "トイレリフォームで後悔しないための注意点と成功のコツを整理。",
+    "date": "2025-02-27",
+    "readTime": "9分",
+    "category": "トイレ",
+    "image": "/images/toilet_remodel_tips_0.jpg",
+    "tags": [
+      "トイレ",
+      "リフォーム",
+      "注意点",
+      "設備"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "サイズ選びや掃除性、設備条件など、トイレリフォームを失敗しないためのチェックポイントを詳しく解説します。",
+    "contentPath": "/posts/toilet_remodel_tips.html"
+  },
+  {
+    "id": "toilet-renovation-cost",
+    "title": "トイレリフォームの費用相場を徹底解説！安く抑えるコツと事例別コストガイド",
+    "excerpt": "トイレリフォームの費用相場と工事別の目安、節約術を解説。",
+    "date": "2025-02-28",
+    "readTime": "10分",
+    "category": "トイレ",
+    "image": "/images/toilet_renovation_cost_0.jpg",
+    "tags": [
+      "トイレ",
+      "費用",
+      "リフォーム",
+      "見積もり"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "本体価格と工事費の内訳、予算別の事例、コストを抑えるポイントを整理しました。",
+    "contentPath": "/posts/toilet_renovation_cost.html"
   }
 ]
