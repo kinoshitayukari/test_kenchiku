@@ -1,5 +1,185 @@
 [
   {
+    "id": "App_Google_AI_Studio_Build",
+    "title": "Google AI Studioの「Build」機能でアプリ作成！初心者でもノーコードで開発・公開する方法を徹底解説",
+    "excerpt": "Google AI StudioのBuild機能で、ノーコードでもアプリを作成・公開できる流れとポイントを解説します。",
+    "date": "2025-03-09",
+    "readTime": "8分",
+    "category": "AI",
+    "image": "/images/App_Google_AI_Studio_Build_0.jpg",
+    "tags": [
+      "AI",
+      "Google",
+      "ノーコード"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "Google AI StudioのBuild機能でアプリを作成する手順や、公開までに押さえたいポイントをまとめます。",
+    "contentPath": "/posts/App_Google_AI_Studio_Build.html"
+  },
+  {
+    "id": "Defference_GPT1.5Image_NanoBanana",
+    "title": "GPT-Image-1.5 vs Nano Banana 徹底比較！画像生成AIの選び方と使い分けガイド",
+    "excerpt": "GPT-Image-1.5とNano Bananaの特徴を比較し、用途別の使い分けポイントを整理します。",
+    "date": "2025-03-08",
+    "readTime": "10分",
+    "category": "AI",
+    "image": "/images/Defference_GPT1.5Image_NanoBanana_0.jpg",
+    "tags": [
+      "AI",
+      "画像生成",
+      "比較"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "GPT-Image-1.5とNano Bananaの性能や活用シーンを比較し、最適な選択肢を提案します。",
+    "contentPath": "/posts/Defference_GPT1.5Image_NanoBanana.html"
+  },
+  {
+    "id": "Defference_GoogleAIStudio_GeminiOpal",
+    "title": "Google AI StudioとGemini Opalの違いを徹底比較！初心者に最適なツールの選び方",
+    "excerpt": "Google AI StudioとGemini Opalの機能差や使い分けの基準をわかりやすく整理します。",
+    "date": "2025-03-07",
+    "readTime": "9分",
+    "category": "AI",
+    "image": "/images/Defference_GoogleAIStudio_GeminiOpal_0.jpg",
+    "tags": [
+      "AI",
+      "Google",
+      "ツール比較"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "Google AI StudioとGemini Opalの特徴を整理し、目的別の選び方を解説します。",
+    "contentPath": "/posts/Defference_GoogleAIStudio_GeminiOpal.html"
+  },
+  {
+    "id": "defference_gemini3_chatgpt5",
+    "title": "Gemini 3.0 Pro vs ChatGPT 5.2 徹底比較！2025年最強AIはどっち？仕事で役立つ選び方を解説",
+    "excerpt": "Gemini 3.0 ProとChatGPT 5.2の強みを比較し、仕事での活用軸をまとめます。",
+    "date": "2025-03-06",
+    "readTime": "10分",
+    "category": "AI",
+    "image": "/images/defference_gemini3_chatgpt5_0.jpg",
+    "tags": [
+      "AI",
+      "比較",
+      "業務効率化"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "Gemini 3.0 ProとChatGPT 5.2を用途別に比較し、最適な選択基準を整理します。",
+    "contentPath": "/posts/defference_gemini3_chatgpt5.html"
+  },
+  {
+    "id": "what_gemini_3_flash",
+    "title": "「Gemini 3.0 Flashで何ができる？」徹底解説！進化点・使い方・活用事例まとめ",
+    "excerpt": "Gemini 3.0 Flashの進化点や使い方、実務での活用例をまとめます。",
+    "date": "2025-03-05",
+    "readTime": "8分",
+    "category": "AI",
+    "image": "/images/what_gemini_3_flash_0.jpg",
+    "tags": [
+      "AI",
+      "Gemini",
+      "活用事例"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "Gemini 3.0 Flashの特徴を整理し、具体的な活用シーンを紹介します。",
+    "contentPath": "/posts/what_gemini_3_flash.html"
+  },
+  {
+    "id": "miniapp_function_on_gems",
+    "title": "GeminiのGemsで「ミニアプリ」が作成可能に！新機能Opalの使い方と活用術を徹底解説",
+    "excerpt": "GeminiのGemsで使えるミニアプリ機能と、Opalの活用ポイントを解説します。",
+    "date": "2025-03-04",
+    "readTime": "8分",
+    "category": "AI",
+    "image": "/images/miniapp_function_on_gems_0.jpg",
+    "tags": [
+      "AI",
+      "Gemini",
+      "自動化"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "Gemini Gemsでミニアプリを作る方法と、業務効率化に役立つ使い方を整理します。",
+    "contentPath": "/posts/miniapp_function_on_gems.html"
+  },
+  {
+    "id": "Elon_Macrohard",
+    "title": "イーロン・マスクが仕掛ける「Macrohard（マクロハード）」とは？マイクロソフトへの挑戦とAI革命の全貌",
+    "excerpt": "xAIの「Macrohard」構想が示す狙いと、IT業界への影響を読み解きます。",
+    "date": "2025-03-03",
+    "readTime": "9分",
+    "category": "AI",
+    "image": "/images/Elon_Macrohard_0.jpg",
+    "tags": [
+      "AI",
+      "xAI",
+      "テクノロジー"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "イーロン・マスクのMacrohard構想の背景と、今後の影響を整理します。",
+    "contentPath": "/posts/Elon_Macrohard.html"
+  },
+  {
+    "id": "Elon_space_newest",
+    "title": "イーロン・マスクの宇宙事業最前線：SpaceXの最新動向と2026年IPOへの展望",
+    "excerpt": "SpaceXの最新動向やStarlinkの広がり、IPO観測のポイントをまとめます。",
+    "date": "2025-03-02",
+    "readTime": "9分",
+    "category": "AI",
+    "image": "/images/Elon_space_newest_0.jpg",
+    "tags": [
+      "SpaceX",
+      "宇宙",
+      "テクノロジー"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "SpaceXの事業展開とIPO観測の要点を整理し、宇宙ビジネスの最新潮流を紹介します。",
+    "contentPath": "/posts/Elon_space_newest.html"
+  },
+  {
+    "id": "Elon_sunpower_newest",
+    "title": "イーロン・マスクが「核融合は不要」と主張する真意とは？太陽光発電が最適解とされる理由を徹底解説",
+    "excerpt": "核融合より太陽光発電を推す理由を整理し、エネルギー戦略の視点を解説します。",
+    "date": "2025-03-01",
+    "readTime": "9分",
+    "category": "AI",
+    "image": "/images/Elon_sunpower_newest_0.jpg",
+    "tags": [
+      "エネルギー",
+      "太陽光",
+      "テクノロジー"
+    ],
+    "author": {
+      "name": "Tomoaki建築工房",
+      "avatar": "/images/tomoaki-author.jpg"
+    },
+    "summary": "核融合と太陽光発電の比較を通じて、エネルギー戦略の要点を解説します。",
+    "contentPath": "/posts/Elon_sunpower_newest.html"
+  },
+  {
     "id": "kitchen-reform-guide",
     "title": "キッチンリフォームで後悔しないための実践ガイド",
     "excerpt": "動線・収納・設備選びの3つを押さえて、毎日の家事が驚くほど楽になるキッチンリフォームのポイントをまとめました。",
