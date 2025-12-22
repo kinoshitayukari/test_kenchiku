@@ -52,5 +52,149 @@
       "ゴミ箱と収納動線を図面段階で固定し、無駄な買い替えを防止",
       "管理規約・搬入経路を確認し、着工前に必要書類を準備"
     ]
+  },
+  {
+    "id": "kitchen-remodel-tips",
+    "title": "キッチンリフォームで失敗しないための完全ガイド｜プロが教える注意点と後悔を防ぐ5つの鉄則",
+    "excerpt": "キッチンリフォームの注意点やレイアウトのコツ、業者選びまでを網羅し、後悔しない進め方を解説します。",
+    "date": "2024-11-12",
+    "readTime": "10分",
+    "category": "キッチン",
+    "image": "/blog/posts/images/upload_contents_reform_kitchen_remodel_tips_report_001.jpg",
+    "tags": [
+      "キッチン",
+      "リフォーム",
+      "注意点"
+    ],
+    "summary": "動線・収納・設備選びの基本から、具体的な失敗回避のポイントまでをまとめた完全ガイドです。",
+    "contentPath": "/posts/upload_contents_reform_kitchen_remodel_tips.html"
+  },
+  {
+    "id": "kitchen-renovation-cost",
+    "title": "キッチンリフォームの費用相場を徹底解説！コストを抑えるコツと予算別事例ガイド",
+    "excerpt": "キッチンリフォームの費用相場と、コストを抑えるためのポイントをわかりやすく整理しました。",
+    "date": "2024-11-13",
+    "readTime": "9分",
+    "category": "コスト",
+    "image": "/blog/posts/images/upload_contents_reform_kitchen_renovation_cost_realistic_photo_1.png",
+    "tags": [
+      "キッチン",
+      "費用",
+      "見積もり"
+    ],
+    "summary": "予算別の事例と合わせて、費用の考え方や節約のコツを解説します。",
+    "contentPath": "/posts/upload_contents_reform_kitchen_renovation_cost.html"
+  },
+  {
+    "id": "living-renovation-considerations",
+    "title": "理想のリビングを実現！リフォームで失敗しないための注意点・費用相場・事例を徹底解説",
+    "excerpt": "リビングリフォームで失敗しないために、注意点や費用相場、事例までまとめて解説します。",
+    "date": "2024-11-14",
+    "readTime": "9分",
+    "category": "リビング",
+    "image": "/blog/posts/images/upload_contents_reform_living_renovation_considerations_realistic_photo_1.png",
+    "tags": [
+      "リビング",
+      "リフォーム",
+      "注意点"
+    ],
+    "summary": "家族の中心となる空間を整えるための基礎知識とポイントを整理しています。",
+    "contentPath": "/posts/upload_contents_reform_living_renovation_considerations.html"
+  },
+  {
+    "id": "living-renovation-cost",
+    "title": "リビングリフォームの費用相場を完全解説！予算別の事例と安く抑えるコツ",
+    "excerpt": "リビングリフォームの費用相場と、コストを抑えるための工夫を解説します。",
+    "date": "2024-11-15",
+    "readTime": "8分",
+    "category": "コスト",
+    "image": "/blog/posts/images/upload_contents_reform_living_renovation_cost_realistic_photo_1.png",
+    "tags": [
+      "リビング",
+      "費用",
+      "予算"
+    ],
+    "summary": "予算別の事例を交えながら、費用内訳の考え方をまとめました。",
+    "contentPath": "/posts/upload_contents_reform_living_renovation_cost.html"
+  },
+  {
+    "id": "outside-reform-attention",
+    "title": "【保存版】外装リフォームで失敗しないための注意点完全ガイド｜初心者でも安心の基礎知識から業者選びまで",
+    "excerpt": "外装リフォームの基礎知識から業者選びまで、失敗を防ぐための注意点を整理しました。",
+    "date": "2024-11-16",
+    "readTime": "10分",
+    "category": "外壁",
+    "image": "/blog/posts/images/upload_contents_reform_outside_reform_attention_rep1ort_001.jpg",
+    "tags": [
+      "外装",
+      "外壁",
+      "注意点"
+    ],
+    "summary": "外装リフォームの進め方とチェックポイントを網羅的に解説します。",
+    "contentPath": "/posts/upload_contents_reform_outside_reform_attention.html"
+  },
+  {
+    "id": "outside-reform-cost",
+    "title": "外装リフォームの費用相場はいくら？塗装・カバー工法・張り替えの比較と失敗しない節約術",
+    "excerpt": "外装リフォームの費用相場と施工方法の違い、節約のコツを解説します。",
+    "date": "2024-11-17",
+    "readTime": "9分",
+    "category": "コスト",
+    "image": "/blog/posts/images/upload_contents_reform_outside_reform_cost_rep1ort_001.jpg",
+    "tags": [
+      "外装",
+      "費用",
+      "節約"
+    ],
+    "summary": "塗装・カバー工法・張り替えの比較ポイントを整理しています。",
+    "contentPath": "/posts/upload_contents_reform_outside_reform_cost.html"
+  },
+  {
+    "id": "reform-attention",
+    "title": "【プロが教える】リフォームで失敗しないための全注意点：事例から学ぶ成功のポイント",
+    "excerpt": "リフォーム全体で失敗を避けるための注意点と成功のポイントをまとめました。",
+    "date": "2024-11-18",
+    "readTime": "9分",
+    "category": "リフォーム",
+    "image": "/blog/posts/images/upload_contents_reform_reform_attention_rep1ort_001.jpg",
+    "tags": [
+      "リフォーム",
+      "注意点",
+      "成功事例"
+    ],
+    "summary": "事例を交えながら、計画段階で押さえるべきポイントを解説します。",
+    "contentPath": "/posts/upload_contents_reform_reform_attention.html"
+  },
+  {
+    "id": "toilet-remodel-tips",
+    "title": "トイレリフォームで後悔しない！失敗を防ぐ注意点と成功のポイント完全ガイド",
+    "excerpt": "トイレリフォームで後悔しないための注意点と、成功のポイントをまとめています。",
+    "date": "2024-11-19",
+    "readTime": "8分",
+    "category": "トイレ",
+    "image": "/blog/posts/images/upload_contents_reform_toilet_remodel_tips_rep1ort_001.jpg",
+    "tags": [
+      "トイレ",
+      "リフォーム",
+      "注意点"
+    ],
+    "summary": "設備選びから動線まで、失敗しないための具体策を整理しました。",
+    "contentPath": "/posts/upload_contents_reform_toilet_remodel_tips.html"
+  },
+  {
+    "id": "toilet-renovation-cost",
+    "title": "トイレリフォームの費用相場を徹底解説！安く抑えるコツと事例別コストガイド",
+    "excerpt": "トイレリフォームの費用相場と、費用を抑えるためのポイントを解説します。",
+    "date": "2024-11-20",
+    "readTime": "7分",
+    "category": "コスト",
+    "image": "/blog/posts/images/upload_contents_reform_toilet_renovation_cost_rep1ort_001.jpg",
+    "tags": [
+      "トイレ",
+      "費用",
+      "予算"
+    ],
+    "summary": "工事内容別の費用目安と、予算内で進めるコツをまとめました。",
+    "contentPath": "/posts/upload_contents_reform_toilet_renovation_cost.html"
   }
 ]
