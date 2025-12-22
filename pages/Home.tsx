@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS } from '../constants';
-import { Calculator, ShieldCheck, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
+import { PORTFOLIO_ITEMS, PLANS, FAQ_ITEMS, GOOGLE_FORM_URL, GOOGLE_FORM_EMBED_URL } from '../constants';
+import { Calculator, ShieldCheck, Check, ChevronDown, ChevronUp, ArrowRight, Home as HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const GOOGLE_FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSfQETOV-WxN_gYJNU9eWC2y9XTfHU8J-36_RfMmRrSlIn3FSA/viewform?usp=dialog';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -330,7 +327,7 @@ const Home: React.FC = () => {
             </div>
             <div className="aspect-[3/4] md:aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-lg border border-gray-100 bg-white">
               <iframe
-                src={GOOGLE_FORM_URL}
+                src={GOOGLE_FORM_EMBED_URL}
                 className="w-full h-full"
                 allowFullScreen
                 title="お問い合わせフォーム"

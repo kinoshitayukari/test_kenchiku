@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, Instagram, Facebook, Twitter, MapPin, UserCog } from 'lucide-react';
-import { NAV_ITEMS } from '../constants';
+import { NAV_ITEMS, GOOGLE_FORM_URL } from '../constants';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -153,7 +153,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div>
               <h4 className="font-bold mb-6">お問い合わせ</h4>
               <ul className="space-y-3 text-sm text-gray-400">
-                <li className="hover:text-white cursor-pointer">無料見積もり</li>
+                <li>
+                  <a
+                    href={GOOGLE_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white"
+                  >
+                    無料見積もりフォーム
+                  </a>
+                </li>
                 <li className="hover:text-white cursor-pointer">電話相談</li>
                 <li className="hover:text-white cursor-pointer">来店予約</li>
               </ul>
