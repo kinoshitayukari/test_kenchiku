@@ -1,59 +1,5 @@
 [
   {
-    "id": "kitchen-reform-guide",
-    "title": "キッチンリフォームで後悔しないための実践ガイド",
-    "excerpt": "動線・収納・設備選びの3つを押さえて、毎日の家事が驚くほど楽になるキッチンリフォームのポイントをまとめました。",
-    "date": "2024-11-04",
-    "readTime": "7分",
-    "category": "キッチン",
-    "image": "/images/kitchen-reform-hero.jpg",
-    "tags": [
-      "キッチン",
-      "リフォーム",
-      "収納",
-      "動線"
-    ],
-    "author": {
-      "name": "Tomoaki建築工房",
-      "avatar": "/images/tomoaki-author.jpg"
-    },
-    "summary": "ワークトライアングルの設計から収納計画、設備選びまで、キッチンをストレスなく使うための具体的な進め方を解説します。",
-    "contentPath": "/posts/kitchen-reform-guide.html",
-    "checkpoints": [
-      "動線はワークトライアングルを2.7〜6mで設計する",
-      "背面収納の通路幅は90cm以上、ゴミ箱の置き場を最初に決める",
-      "お手入れ時間で設備と素材を選び、よく使う場所に予算を集中",
-      "既存配管を活かし、追加工事を避けて工期と費用を抑える"
-    ]
-  },
-  {
-    "id": "kitchen-reform-costs",
-    "title": "キッチンリフォーム費用の目安と予算の組み方",
-    "excerpt": "グレード別の相場、追加費用を防ぐチェックポイント、優先順位の付け方をまとめた費用ガイド。",
-    "date": "2024-11-10",
-    "readTime": "8分",
-    "category": "キッチン",
-    "image": "/images/kitchen-cost-hero.jpg",
-    "tags": [
-      "キッチン",
-      "リフォーム",
-      "費用",
-      "見積もり"
-    ],
-    "author": {
-      "name": "Tomoaki建築工房",
-      "avatar": "/images/tomoaki-author.jpg"
-    },
-    "summary": "戸建てとマンションの違い、グレード別価格帯、追加費用の防ぎ方を整理し、失敗しない予算づくりを解説します。",
-    "contentPath": "/posts/kitchen-reform-costs.html",
-    "checkpoints": [
-      "配管・電気の条件を事前確認し、追加費用の予備費を確保",
-      "掃除の時短につながる仕様に優先的に投資",
-      "ゴミ箱と収納動線を図面段階で固定し、無駄な買い替えを防止",
-      "管理規約・搬入経路を確認し、着工前に必要書類を準備"
-    ]
-  },
-  {
     "id": "kitchen-remodel-tips",
     "title": "キッチンリフォームで失敗しないための完全ガイド｜プロが教える注意点と後悔を防ぐ5つの鉄則",
     "excerpt": "キッチンリフォームの注意点やレイアウトのコツ、業者選びまでを網羅し、後悔しない進め方を解説します。",
