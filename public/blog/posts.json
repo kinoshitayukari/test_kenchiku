@@ -142,5 +142,21 @@
     ],
     "summary": "工事内容別の費用目安と、予算内で進めるコツをまとめました。",
     "contentPath": "/posts/upload_contents_reform_toilet_renovation_cost.html"
+  },
+  {
+    "id": "reform-precautions-and-improvements",
+    "title": "リフォームの注意点と改善点：失敗しないための完全ガイド",
+    "excerpt": "リフォームで失敗しないための注意点や、住み心地を改善するための具体的なポイントをプロが解説します。",
+    "date": "2025-12-27",
+    "readTime": "8分",
+    "category": "リフォーム",
+    "image": "/blog/posts/images/reform-precautions-thumb.jpg",
+    "tags": [
+      "リフォーム",
+      "注意点",
+      "改善点"
+    ],
+    "summary": "計画段階の注意点から、キッチン・浴室・リビングなど場所別の改善ポイントまでを網羅的に解説。",
+    "contentPath": "/posts/reform-precautions-and-improvements.html"
   }
 ]
