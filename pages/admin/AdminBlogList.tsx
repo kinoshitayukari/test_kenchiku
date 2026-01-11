@@ -1,20 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { storage } from '../../utils/storage';
+import { blogService } from '../../utils/blogService';
 import { BlogPost } from '../../types';
 
 const AdminBlogList: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setPosts(storage.getBlogPosts());
+  const loadPosts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const fetched = await blogService.fetchPosts();
+      setPosts(fetched);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError('ブログ記事の取得に失敗しました。Supabaseの設定とポリシーをご確認ください。');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const handleDelete = (id: string) => {
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
+
+  const handleDelete = async (id: string) => {
     if (window.confirm('本当に削除してもよろしいですか？')) {
-      storage.deleteBlogPost(id);
-      setPosts(storage.getBlogPosts());
+      try {
+        await blogService.deletePost(id);
+        loadPosts();
+      } catch (err) {
+        console.error(err);
+        alert('削除に失敗しました。Supabaseの設定を確認してください。');
+      }
     }
   };
 
@@ -27,6 +48,10 @@ const AdminBlogList: React.FC = () => {
           新規作成
         </Link>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-700 border border-red-100 rounded-lg p-4 mb-4">{error}</div>
+      )}
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full text-left border-collapse">
@@ -53,13 +78,13 @@ const AdminBlogList: React.FC = () => {
                 <td className="p-4 text-sm text-gray-600">{post.date}</td>
                 <td className="p-4 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <Link 
-                      to={`/admin/blog/edit/${post.id}`} 
+                    <Link
+                      to={`/admin/blog/edit/${post.id}`}
                       className="text-blue-500 hover:text-blue-700 p-1"
                     >
                       <Edit size={18} />
                     </Link>
-                    <button 
+                    <button
                       onClick={() => handleDelete(post.id)}
                       className="text-red-500 hover:text-red-700 p-1"
                     >
@@ -69,7 +94,14 @@ const AdminBlogList: React.FC = () => {
                 </td>
               </tr>
             ))}
-            {posts.length === 0 && (
+            {loading && (
+              <tr>
+                <td colSpan={4} className="p-8 text-center text-gray-500">
+                  読み込み中です...
+                </td>
+              </tr>
+            )}
+            {!loading && posts.length === 0 && (
               <tr>
                 <td colSpan={4} className="p-8 text-center text-gray-500">
                   記事がありません。

@@ -1,43 +1,8 @@
-import { BlogPost, Inquiry } from '../types';
-import { BLOG_POSTS } from '../constants';
+import { Inquiry } from '../types';
 
-const BLOG_STORAGE_KEY = 'tomoaki_blog_posts';
 const INQUIRY_STORAGE_KEY = 'tomoaki_inquiries';
 
 export const storage = {
-  // Blog Posts
-  getBlogPosts: (): BlogPost[] => {
-    const stored = localStorage.getItem(BLOG_STORAGE_KEY);
-    if (!stored) {
-      // Initialize with default data if empty
-      localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(BLOG_POSTS));
-      return BLOG_POSTS;
-    }
-    return JSON.parse(stored);
-  },
-
-  getBlogPost: (id: string): BlogPost | undefined => {
-    const posts = storage.getBlogPosts();
-    return posts.find(p => p.id === id);
-  },
-
-  saveBlogPost: (post: BlogPost) => {
-    const posts = storage.getBlogPosts();
-    const index = posts.findIndex(p => p.id === post.id);
-    if (index >= 0) {
-      posts[index] = post;
-    } else {
-      posts.unshift(post); // Add to top
-    }
-    localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
-  },
-
-  deleteBlogPost: (id: string) => {
-    const posts = storage.getBlogPosts();
-    const filtered = posts.filter(p => p.id !== id);
-    localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(filtered));
-  },
-
   // Inquiries
   getInquiries: (): Inquiry[] => {
     const stored = localStorage.getItem(INQUIRY_STORAGE_KEY);

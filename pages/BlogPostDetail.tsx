@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Clock, Check, ChevronRight, Twitter, Facebook, Linkedin, ArrowRight, Lightbulb } from 'lucide-react';
-import { storage } from '../utils/storage';
+import { blogService } from '../utils/blogService';
 import { BlogPost } from '../types';
 
 const BlogPostDetail: React.FC = () => {
@@ -9,27 +9,53 @@ const BlogPostDetail: React.FC = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | undefined>(undefined);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
-  
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    const fetchedPost = storage.getBlogPost(id || '');
-    setPost(fetchedPost);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    if (fetchedPost) {
-      const allPosts = storage.getBlogPosts();
-      setRelatedPosts(
-        allPosts
-          .filter(p => p.category === fetchedPost.category && p.id !== fetchedPost.id)
-          .slice(0, 3)
-      );
-    }
+  useEffect(() => {
+    const loadPost = async () => {
+      if (!id) return;
+
+      window.scrollTo(0, 0);
+      setLoading(true);
+      try {
+        const fetchedPost = await blogService.fetchPostById(id);
+        if (!fetchedPost) {
+          setError('記事が見つかりませんでした。');
+          setPost(undefined);
+          setRelatedPosts([]);
+          return;
+        }
+
+        setPost(fetchedPost);
+        setError(null);
+
+        const related = await blogService.fetchRelatedPosts(fetchedPost.category, fetchedPost.id);
+        setRelatedPosts(related);
+      } catch (err) {
+        console.error(err);
+        setError('記事の読み込みに失敗しました。Supabaseの設定を確認してください。');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPost();
   }, [id]);
 
-  if (!post) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] text-gray-500">
+        読み込み中です...
+      </div>
+    );
+  }
+
+  if (error || !post) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7]">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">記事が見つかりませんでした</h2>
+          <h2 className="text-2xl font-bold mb-4">{error || '記事が見つかりませんでした'}</h2>
           <Link to="/blog" className="text-brand-orange underline">ブログ一覧に戻る</Link>
         </div>
       </div>
@@ -38,7 +64,7 @@ const BlogPostDetail: React.FC = () => {
 
   return (
     <div className="bg-[#fdfbf7] min-h-screen pb-20">
-      
+
       {/* Breadcrumbs */}
       <div className="container mx-auto px-4 md:px-6 py-6">
         <div className="flex items-center text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap">
@@ -51,7 +77,7 @@ const BlogPostDetail: React.FC = () => {
       </div>
 
       <article className="container mx-auto px-4 md:px-6 max-w-4xl">
-        
+
         {/* Header Section */}
         <div className="mb-8">
           <span className="inline-block bg-gray-800 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-4">
@@ -60,7 +86,7 @@ const BlogPostDetail: React.FC = () => {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gray-900 leading-tight mb-6">
             {post.title}
           </h1>
-          
+
           <div className="flex items-center gap-4 text-sm text-gray-500">
             {post.author && (
               <div className="flex items-center gap-2">
@@ -93,7 +119,7 @@ const BlogPostDetail: React.FC = () => {
         )}
 
         {/* Main Content */}
-        <div 
+        <div
           className="prose prose-lg max-w-none text-gray-700 mb-12"
           dangerouslySetInnerHTML={{ __html: post.content || '' }}
         >
@@ -139,7 +165,7 @@ const BlogPostDetail: React.FC = () => {
                 </span>
               ))}
             </div>
-            
+
             <div className="flex items-center gap-4">
               <span className="text-sm font-bold text-gray-600">この記事をシェア :</span>
               <button className="w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 transition-colors">
@@ -164,8 +190,8 @@ const BlogPostDetail: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-6">
             {relatedPosts.length > 0 ? (
               relatedPosts.map(related => (
-                <div 
-                  key={related.id} 
+                <div
+                  key={related.id}
                   className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
                   onClick={() => navigate(`/blog/${related.id}`)}
                 >
@@ -198,7 +224,7 @@ const BlogPostDetail: React.FC = () => {
                 経験豊富なスタッフが、あなたのライフスタイルに合わせた最適なリフォームプランをご提案します。
                 まずは無料相談からお気軽にお問い合わせください。
               </p>
-              <button 
+              <button
                 onClick={() => {
                   navigate('/');
                   setTimeout(() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'}), 100);
