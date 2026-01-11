@@ -11,18 +11,22 @@ const BlogPostDetail: React.FC = () => {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const fetchedPost = storage.getBlogPost(id || '');
-    setPost(fetchedPost);
+    const loadPost = async () => {
+      window.scrollTo(0, 0);
+      const fetchedPost = await storage.getBlogPost(id || '');
+      setPost(fetchedPost);
 
-    if (fetchedPost) {
-      const allPosts = storage.getBlogPosts();
-      setRelatedPosts(
-        allPosts
-          .filter(p => p.category === fetchedPost.category && p.id !== fetchedPost.id)
-          .slice(0, 3)
-      );
-    }
+      if (fetchedPost) {
+        const allPosts = await storage.getBlogPosts();
+        setRelatedPosts(
+          allPosts
+            .filter(p => p.category === fetchedPost.category && p.id !== fetchedPost.id)
+            .slice(0, 3)
+        );
+      }
+    };
+
+    loadPost();
   }, [id]);
 
   if (!post) {
